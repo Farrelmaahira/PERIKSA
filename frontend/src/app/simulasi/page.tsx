@@ -1,4 +1,4 @@
-import SimulasiTemplate from "@/components/organisms/SimulasiTemplate";
+﻿import SimulasiTemplate from "@/components/organisms/SimulasiTemplate";
 import { pageMetadata } from "@/lib/seo/page-metadata";
 
 export const metadata = pageMetadata({

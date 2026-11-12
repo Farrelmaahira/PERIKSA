@@ -1,4 +1,4 @@
-export interface SimStep {
+﻿export interface SimStep {
   title: string;
   short: string;
   guide: string;

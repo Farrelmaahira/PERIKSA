@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+﻿import type { ReactNode } from "react";
 import type { TabProps } from "@/interfaces/dash";
 import RingkasanTab from "@/components/organisms/RingkasanTab";
 import DrafVersiTab from "@/components/organisms/DrafVersiTab";

@@ -1,4 +1,4 @@
-import Check from '@/components/atoms/Check'
+﻿import Check from '@/components/atoms/Check'
 import { cn } from '@/lib/utils'
 
 interface Props {

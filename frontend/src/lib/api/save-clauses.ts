@@ -1,4 +1,4 @@
-import type { ApiResult } from '@/interfaces/api'
+﻿import type { ApiResult } from '@/interfaces/api'
 import type { Clause } from '@/interfaces/drafting'
 import { apiRequest } from '@/lib/api/api-request'
 import { toApiClauses } from '@/lib/api/to-api-clauses'

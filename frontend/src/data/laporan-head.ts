@@ -1,4 +1,4 @@
-/* Page title and intro of the citizen-reports page, per official role. */
+﻿/* Page title and intro of the citizen-reports page, per official role. */
 export const laporanHead = {
   perangkat_desa: {
     title: "Laporan warga",

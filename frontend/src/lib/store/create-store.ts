@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+﻿import { useSyncExternalStore } from "react";
 import type { Store } from "@/interfaces/store";
 
 /* Tiny localStorage-backed store. Components re-render through useSyncExternalStore when it changes. */

@@ -1,4 +1,4 @@
-const LABELS: Record<string, string> = {
+﻿const LABELS: Record<string, string> = {
   kades: 'Kepala Desa',
   perangkat_desa: 'Perangkat Desa',
   penyedia: 'Penyedia',

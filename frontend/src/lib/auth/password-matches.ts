@@ -1,4 +1,4 @@
-import { DEMO_PASSWORD } from "@/data/auth";
+﻿import { DEMO_PASSWORD } from "@/data/auth";
 import type { StoredUser } from "@/interfaces/auth";
 import { hashPassword } from "./hash-password";
 

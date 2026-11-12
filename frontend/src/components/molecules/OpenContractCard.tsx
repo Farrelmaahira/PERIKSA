@@ -1,4 +1,4 @@
-import type { SealedContract } from "@/interfaces/contract";
+﻿import type { SealedContract } from "@/interfaces/contract";
 import { formatRp } from "@/lib/contracts/format-rp";
 import { shortHash } from "@/lib/contracts/short-hash";
 import { cn } from "@/lib/utils";

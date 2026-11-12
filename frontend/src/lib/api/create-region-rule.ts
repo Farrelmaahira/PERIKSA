@@ -1,4 +1,4 @@
-import type { ApiResult, RegionRule } from '@/interfaces/api'
+﻿import type { ApiResult, RegionRule } from '@/interfaces/api'
 import { apiRequest } from '@/lib/api/api-request'
 
 interface Input { regionId?: number; ambangPembelianLangsung: number; ambangPenawaran: number; dasarHukum: string; berlakuSejak: string }

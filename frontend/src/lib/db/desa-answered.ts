@@ -1,4 +1,4 @@
-import type { DReport } from '@/interfaces/db'
+﻿import type { DReport } from '@/interfaces/db'
 
 export const desaAnswered = (r: DReport) => {
   const lastClar = r.actions.map((a) => a.kind).lastIndexOf('klarifikasi')

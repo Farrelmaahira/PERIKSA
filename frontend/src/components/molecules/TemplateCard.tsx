@@ -1,4 +1,4 @@
-import Illustration from '@/components/atoms/Illustration'
+﻿import Illustration from '@/components/atoms/Illustration'
 import type { TemplateInfo } from '@/interfaces/drafting'
 import { cn } from '@/lib/utils'
 

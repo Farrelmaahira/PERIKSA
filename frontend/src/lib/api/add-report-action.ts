@@ -1,4 +1,4 @@
-import type { ApiResult, ReportActionResult } from '@/interfaces/api'
+﻿import type { ApiResult, ReportActionResult } from '@/interfaces/api'
 import { apiRequest } from '@/lib/api/api-request'
 
 interface Input { tindakan: 'klarifikasi' | 'eskalasi' | 'selesai'; catatan: string; status?: string; diteruskanKeRole?: 'bpd' | 'inspektorat' }

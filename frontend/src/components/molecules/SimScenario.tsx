@@ -1,4 +1,4 @@
-import Illustration from "@/components/atoms/Illustration";
+﻿import Illustration from "@/components/atoms/Illustration";
 import { BASE_VALUE } from "@/data/simulator";
 import { formatRp } from "@/lib/contracts/format-rp";
 

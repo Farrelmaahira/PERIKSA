@@ -1,4 +1,4 @@
-import type { AuditFilter } from '@/interfaces/dash'
+﻿import type { AuditFilter } from '@/interfaces/dash'
 
 /* audit_logs.aksi written by the backend (plan section 7.4) -> readable label and chip group */
 export const auditActions: Record<string, { label: string; kind: Exclude<AuditFilter, 'semua'> }> = {

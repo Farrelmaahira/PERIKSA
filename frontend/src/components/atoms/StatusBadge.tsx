@@ -1,4 +1,4 @@
-import Badge from '@/components/atoms/Badge'
+﻿import Badge from '@/components/atoms/Badge'
 import type { ContractStatus } from '@/interfaces/db'
 import { statusTone } from '@/data/dash'
 import { statusLabels } from '@/data/db'

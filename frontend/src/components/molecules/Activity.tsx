@@ -1,4 +1,4 @@
-import type { ActivityItem } from '@/interfaces/activity'
+﻿import type { ActivityItem } from '@/interfaces/activity'
 import Link from 'next/link'
 import { timeAgo } from '@/lib/dates/time-ago'
 

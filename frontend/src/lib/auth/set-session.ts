@@ -1,4 +1,4 @@
-import { AUTH_EVENT, SESSION_KEY } from '@/data/auth'
+﻿import { AUTH_EVENT, SESSION_KEY } from '@/data/auth'
 import type { Session } from '@/interfaces/auth'
 
 export function setSession(s: Session | null) {

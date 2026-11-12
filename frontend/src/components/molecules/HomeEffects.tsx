@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useHeroSink } from "@/hooks/use-hero-sink";
 import { useLoreRings } from "@/hooks/use-lore-rings";

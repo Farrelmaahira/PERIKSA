@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useDash } from '@/hooks/use-dash'
 import { db } from '@/lib/db/db'

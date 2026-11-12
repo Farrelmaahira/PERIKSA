@@ -1,4 +1,4 @@
-import { villageById } from '@/lib/master/village-by-id'
+﻿import { villageById } from '@/lib/master/village-by-id'
 import { counterpartyById } from '@/lib/master/counterparty-by-id'
 import { villageHeads, villages } from '@/data/master'
 

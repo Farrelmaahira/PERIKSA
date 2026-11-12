@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { BASE_VALUE } from "@/data/simulator";
 import { contractText } from "@/lib/contracts/contract-text";
 import { sha256 } from "@/lib/contracts/sha256";

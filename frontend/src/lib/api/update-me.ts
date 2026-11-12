@@ -1,4 +1,4 @@
-import type { ApiResult, Me } from '@/interfaces/api'
+﻿import type { ApiResult, Me } from '@/interfaces/api'
 import { apiRequest } from '@/lib/api/api-request'
 
 interface Input { nama?: string; noHp?: string; usaha?: { nama?: string; npwp?: string; alamat?: string } }

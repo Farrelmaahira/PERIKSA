@@ -1,4 +1,4 @@
-import type { Session } from '@/interfaces/auth'
+﻿import type { Session } from '@/interfaces/auth'
 import type { DReport } from '@/interfaces/db'
 import type { ReportOption } from '@/interfaces/dash'
 import { isClosed } from '@/lib/db/is-closed'

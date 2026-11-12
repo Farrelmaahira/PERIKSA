@@ -1,4 +1,4 @@
-import type { CounterpartyResponse } from '@/lib/api/contracts'
+﻿import type { CounterpartyResponse } from '@/lib/api/contracts'
 import type { Counterparty, CounterpartyType } from '@/interfaces/master'
 
 const TYPES: Record<string, CounterpartyType> = { umkm: 'UMKM', bumdes: 'BUMDes', penerima_hibah: 'Penerima hibah', penyewa: 'Penyewa' }

@@ -1,4 +1,4 @@
-import type { Clause } from "@/interfaces/drafting";
+﻿import type { Clause } from "@/interfaces/drafting";
 
 /* First problem that blocks saving a hand-written clause list, or null when it is complete. */
 export function clauseError(clauses: Clause[]): string | null {

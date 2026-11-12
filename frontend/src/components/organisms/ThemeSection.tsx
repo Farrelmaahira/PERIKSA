@@ -1,4 +1,4 @@
-import Illustration from '@/components/atoms/Illustration'
+﻿import Illustration from '@/components/atoms/Illustration'
 import CurvedArrow from '@/components/atoms/CurvedArrow'
 
 export default function ThemeSection() {

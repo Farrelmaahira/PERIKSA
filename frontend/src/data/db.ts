@@ -1,4 +1,4 @@
-import type { ActionKind, ContractStatus, PubField, ReportFlow } from '@/interfaces/db'
+﻿import type { ActionKind, ContractStatus, PubField, ReportFlow } from '@/interfaces/db'
 
 export const statusOrder: ContractStatus[] = ['draf', 'diaudit', 'ditinjau', 'ditandatangani', 'dipublikasikan', 'berjalan', 'selesai']
 
@@ -69,4 +69,3 @@ export const keyByTitle: Record<string, string> = {
   Pemeliharaan: 'pemeliharaan',
 }
 
-export const allPub = { fields: [...pubFields] }

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import type { TabProps } from '@/interfaces/dash'
 import { isEditable } from '@/lib/db/is-editable'

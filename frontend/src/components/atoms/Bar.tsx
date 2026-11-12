@@ -1,4 +1,4 @@
-interface Props { value: number; tone?: 'blue' | 'red' }
+﻿interface Props { value: number; tone?: 'blue' | 'red' }
 
 export default function Bar({ value, tone = 'blue' }: Props) {
   return (

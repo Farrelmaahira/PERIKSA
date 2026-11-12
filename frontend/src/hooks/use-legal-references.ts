@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import type { ApiResult, LegalReference } from '@/interfaces/api'
 import { fetchDraftOptions } from '@/lib/api/fetch-draft-options'
 

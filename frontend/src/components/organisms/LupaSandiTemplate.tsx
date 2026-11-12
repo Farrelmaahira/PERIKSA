@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useRememberedEmail } from '@/hooks/use-remembered-email'
 import AuthShell from './AuthShell'

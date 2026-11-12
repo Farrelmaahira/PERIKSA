@@ -1,4 +1,4 @@
-import type { Session } from '@/interfaces/auth'
+﻿import type { Session } from '@/interfaces/auth'
 import type { Db } from '@/interfaces/db'
 import type { Notif } from '@/interfaces/notifications'
 import { scopeContracts } from '@/lib/db/scope-contracts'

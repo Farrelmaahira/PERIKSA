@@ -1,4 +1,4 @@
-import Badge from "@/components/atoms/Badge";
+﻿import Badge from "@/components/atoms/Badge";
 import type { ReportFlow } from "@/interfaces/db";
 import { flowTone } from "@/data/dash";
 import { flowLabels, wargaFlowLabels } from "@/data/db";

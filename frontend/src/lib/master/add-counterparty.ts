@@ -1,4 +1,4 @@
-import type { Counterparty } from '@/interfaces/master'
+﻿import type { Counterparty } from '@/interfaces/master'
 import { uid } from '@/lib/dates/uid'
 import { counterpartyStore } from './counterparty-store'
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import type { Session } from '@/interfaces/auth'
 import type { DContract } from '@/interfaces/db'
 import type { Clause } from '@/interfaces/drafting'

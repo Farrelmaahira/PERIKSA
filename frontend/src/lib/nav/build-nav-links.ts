@@ -1,4 +1,4 @@
-import { navLinks } from "@/data/nav-links";
+﻿import { navLinks } from "@/data/nav-links";
 import type { Session } from "@/interfaces/auth";
 import type { NavLink } from "@/interfaces/content";
 import { sessionLink } from "@/lib/nav/session-link";

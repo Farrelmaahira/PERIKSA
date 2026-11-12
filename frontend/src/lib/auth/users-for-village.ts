@@ -1,4 +1,4 @@
-import { users } from './users-store'
+﻿import { users } from './users-store'
 
 /* Read-only list for "Profil Desa" (people with access to a village) */
 export function usersForVillage(villageId: string) {

@@ -1,4 +1,4 @@
-import { AUTH_EVENT } from '@/data/auth'
+﻿import { AUTH_EVENT } from '@/data/auth'
 
 export function subscribeSession(cb: () => void) {
   window.addEventListener(AUTH_EVENT, cb)

@@ -1,4 +1,4 @@
-import { useEffect, type RefObject } from 'react'
+﻿import { useEffect, type RefObject } from 'react'
 
 /* Closes a popover on Escape or a click outside it. */
 export function useOutsideClose(open: boolean, ref: RefObject<HTMLElement | null>, onClose: () => void) {

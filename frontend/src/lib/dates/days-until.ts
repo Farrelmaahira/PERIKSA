@@ -1,4 +1,4 @@
-import { DAY_MS } from '@/data/time'
+﻿import { DAY_MS } from '@/data/time'
 
 /* Whole days from today until the date (negative when it has passed) */
 export function daysUntil(iso: string) {

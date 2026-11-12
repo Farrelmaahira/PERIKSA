@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import SimScenario from "@/components/molecules/SimScenario";
 import { useScrollOnChange } from "@/hooks/use-scroll-on-change";

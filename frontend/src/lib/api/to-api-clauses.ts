@@ -1,4 +1,4 @@
-import type { ApiClause } from '@/interfaces/api'
+﻿import type { ApiClause } from '@/interfaces/api'
 import type { Clause } from '@/interfaces/drafting'
 
 /* Local clauses -> backend shape; urutan follows the list order (1-based). */

@@ -1,4 +1,4 @@
-import Badge from '@/components/atoms/Badge'
+﻿import Badge from '@/components/atoms/Badge'
 import type { ClauseSource } from '@/interfaces/drafting'
 
 interface Props { source?: ClauseSource }

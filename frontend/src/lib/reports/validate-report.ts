@@ -1,4 +1,4 @@
-interface Fields {
+﻿interface Fields {
   category: string
   clause: string
   text: string

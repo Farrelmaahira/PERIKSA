@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+﻿import type { ReactNode } from 'react'
 import HeroBg from '@/components/atoms/HeroBg'
 import Underline from '@/components/atoms/Underline'
 import AuthPoints from '@/components/molecules/AuthPoints'

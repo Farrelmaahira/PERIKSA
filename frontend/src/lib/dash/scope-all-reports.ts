@@ -1,4 +1,4 @@
-import { db } from '@/lib/db/db'
+﻿import { db } from '@/lib/db/db'
 import { scopeReports } from '@/lib/db/scope-reports'
 
 /* All reports of one village (not only escalated ones), used for risk and village summaries */

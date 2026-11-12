@@ -1,4 +1,4 @@
-import type { ApiResult, SealVerifyResult } from '@/interfaces/api'
+﻿import type { ApiResult, SealVerifyResult } from '@/interfaces/api'
 import { apiRequest } from '@/lib/api/api-request'
 
 /* GET /public/seals/verify?hash= (anonymous allowed). Only a full 64-character SHA-256 hex. */

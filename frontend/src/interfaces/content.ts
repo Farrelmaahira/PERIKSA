@@ -1,4 +1,4 @@
-import type { IllustrationName } from '@/data/illustrations'
+﻿import type { IllustrationName } from '@/data/illustrations'
 
 /* Static copy shown on the landing pages. */
 

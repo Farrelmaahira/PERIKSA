@@ -1,4 +1,4 @@
-import type { ContractAudit } from '@/interfaces/api'
+﻿import type { ContractAudit } from '@/interfaces/api'
 
 /* Untrusted audit JSON -> ContractAudit, or null when skor/findings are missing. */
 export function toContractAudit(raw: unknown): ContractAudit | null {

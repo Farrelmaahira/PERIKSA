@@ -1,4 +1,4 @@
-import Grip from '@/components/atoms/Grip'
+﻿import Grip from '@/components/atoms/Grip'
 import TypeIcon from '@/components/atoms/TypeIcon'
 import type { ContractTypeOption } from '@/interfaces/simulator'
 

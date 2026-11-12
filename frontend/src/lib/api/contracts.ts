@@ -1,4 +1,4 @@
-import type { ApiClause } from "@/interfaces/api";
+﻿import type { ApiClause } from "@/interfaces/api";
 import type { ClauseSource } from "@/interfaces/drafting";
 import { getAuthToken } from "./reports";
 

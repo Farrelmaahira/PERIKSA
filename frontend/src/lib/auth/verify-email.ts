@@ -1,4 +1,4 @@
-import type { VerifyEmailResult } from '@/interfaces/auth'
+﻿import type { VerifyEmailResult } from '@/interfaces/auth'
 import { markUsed } from './mark-used'
 import { readToken } from './read-token'
 import { updateUser } from './update-user'

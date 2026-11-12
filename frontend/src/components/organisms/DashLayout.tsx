@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, type ReactNode } from 'react'
 import { useRequireSession } from '@/hooks/use-require-session'

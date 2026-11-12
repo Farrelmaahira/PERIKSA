@@ -1,4 +1,4 @@
-import ScopeFolders from "./ScopeFolders";
+﻿import ScopeFolders from "./ScopeFolders";
 
 export default function ScopeSection() {
   return (

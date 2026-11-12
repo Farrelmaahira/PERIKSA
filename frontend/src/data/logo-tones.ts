@@ -1,4 +1,4 @@
-import type { LogoTone } from "@/interfaces/logo";
+﻿import type { LogoTone } from "@/interfaces/logo";
 
 export const logoTones: Record<LogoTone, Record<string, string>> = {
   color: {

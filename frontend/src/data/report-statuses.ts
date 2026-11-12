@@ -1,1 +1,1 @@
-export const reportStatuses = ['Diterima', 'Diverifikasi', 'Ditindaklanjuti']
+﻿export const reportStatuses = ['Diterima', 'Diverifikasi', 'Ditindaklanjuti']

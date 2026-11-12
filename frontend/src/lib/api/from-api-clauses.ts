@@ -1,4 +1,4 @@
-import type { Clause } from '@/interfaces/drafting'
+﻿import type { Clause } from '@/interfaces/drafting'
 
 /* Untrusted server clauses -> local clauses, sorted by urutan. Entries without a code or title are dropped. */
 export function fromApiClauses(list: unknown[]): Clause[] {

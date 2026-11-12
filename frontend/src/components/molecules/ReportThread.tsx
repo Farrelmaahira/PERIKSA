@@ -1,4 +1,4 @@
-import type { ReportAction } from '@/interfaces/db'
+﻿import type { ReportAction } from '@/interfaces/db'
 import { actionLabels } from '@/data/db'
 import { roleLabels } from '@/data/auth'
 import { timeAgo } from '@/lib/dates/time-ago'

@@ -1,4 +1,4 @@
-import Arrow from "@/components/atoms/Arrow";
+﻿import Arrow from "@/components/atoms/Arrow";
 import BackButton from "@/components/atoms/BackButton";
 import PillButton from "@/components/atoms/PillButton";
 import { steps } from "@/data/simulator";

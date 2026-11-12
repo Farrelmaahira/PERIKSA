@@ -1,4 +1,4 @@
-import type { AboutItem } from "@/interfaces/content";
+﻿import type { AboutItem } from "@/interfaces/content";
 
 interface Props {
   item: AboutItem;

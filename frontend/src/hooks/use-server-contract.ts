@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import type { UserRole } from '@/interfaces/auth'
 import { fetchContractsAPI } from '@/lib/api/contracts'
 import { loadContract } from '@/lib/api/load-contract'

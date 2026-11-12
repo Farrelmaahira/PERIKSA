@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 import DashLayout from '@/components/organisms/DashLayout'
 

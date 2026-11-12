@@ -1,4 +1,4 @@
-import Check from "@/components/atoms/Check";
+﻿import Check from "@/components/atoms/Check";
 import { steps } from "@/data/simulator";
 import { cn } from "@/lib/utils";
 

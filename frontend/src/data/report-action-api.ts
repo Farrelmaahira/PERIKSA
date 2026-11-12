@@ -1,4 +1,4 @@
-import type { ActionKind } from '@/interfaces/db'
+﻿import type { ActionKind } from '@/interfaces/db'
 
 type Body = { tindakan: 'klarifikasi' | 'eskalasi' | 'selesai'; status?: string; diteruskanKeRole?: 'bpd' | 'inspektorat' }
 

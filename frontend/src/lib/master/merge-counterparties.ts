@@ -1,4 +1,4 @@
-import type { CounterpartyResponse } from '@/lib/api/contracts'
+﻿import type { CounterpartyResponse } from '@/lib/api/contracts'
 import type { Counterparty } from '@/interfaces/master'
 import { toCounterparty } from '@/lib/master/to-counterparty'
 

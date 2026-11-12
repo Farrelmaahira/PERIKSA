@@ -1,4 +1,4 @@
-import type { DContract } from '@/interfaces/db'
+﻿import type { DContract } from '@/interfaces/db'
 import type { KontrakFilter } from '@/interfaces/dash'
 
 export const groupOf = (c: DContract): Exclude<KontrakFilter, 'semua' | 'tindakan'> =>

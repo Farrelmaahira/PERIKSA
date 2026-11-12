@@ -1,4 +1,4 @@
-import type { NavLink } from "@/interfaces/content";
+﻿import type { NavLink } from "@/interfaces/content";
 
 export const navLinks: NavLink[] = [
   { label: "Beranda", href: "/" },

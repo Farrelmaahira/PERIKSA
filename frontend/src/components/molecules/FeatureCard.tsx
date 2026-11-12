@@ -1,4 +1,4 @@
-import Illustration from '@/components/atoms/Illustration'
+﻿import Illustration from '@/components/atoms/Illustration'
 import type { Feature } from '@/interfaces/content'
 
 interface Props {

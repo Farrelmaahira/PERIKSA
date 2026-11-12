@@ -1,4 +1,4 @@
-interface Props {
+﻿interface Props {
   label: string
   checked: boolean
   onChange: (checked: boolean) => void

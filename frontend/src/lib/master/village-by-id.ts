@@ -1,4 +1,4 @@
-import { villages } from '@/data/master'
+﻿import { villages } from '@/data/master'
 import type { Village } from '@/interfaces/master'
 
 const numericVillageMap: Record<string, string> = {

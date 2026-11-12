@@ -1,4 +1,4 @@
-import type { ApiResult, Pengawas } from '@/interfaces/api'
+﻿import type { ApiResult, Pengawas } from '@/interfaces/api'
 import { apiRequest } from '@/lib/api/api-request'
 
 /* GET /admin/pengawas: BPD and Inspektorat accounts in the admin's region. */

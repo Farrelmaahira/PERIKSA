@@ -1,4 +1,4 @@
-import { fmtDate } from './fmt-date'
+﻿import { fmtDate } from './fmt-date'
 
 export function timeAgo(iso: string) {
   const diff = Date.now() - new Date(iso).getTime()

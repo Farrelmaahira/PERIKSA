@@ -1,4 +1,4 @@
-import { update } from '@/lib/db/update'
+﻿import { update } from '@/lib/db/update'
 import { daysFromNow } from '@/lib/dates/days-from-now'
 
 export function markPaid(code: string, no: number) {

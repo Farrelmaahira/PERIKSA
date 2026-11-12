@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import Icon from '@/components/atoms/Icon'
 import Hint from '@/components/atoms/Hint'
 import type { Audit, Clause } from '@/interfaces/drafting'

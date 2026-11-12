@@ -1,4 +1,4 @@
-import type { AuthError } from '@/interfaces/auth'
+﻿import type { AuthError } from '@/interfaces/auth'
 import type { RegisterForm } from '@/interfaces/register'
 import { checkAccount } from '@/lib/auth/check-account'
 import { checkBusiness } from '@/lib/auth/check-business'

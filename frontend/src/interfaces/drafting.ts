@@ -1,4 +1,4 @@
-import type { IllustrationName } from '@/data/illustrations'
+﻿import type { IllustrationName } from '@/data/illustrations'
 import type { Counterparty, CounterpartyType, Village } from '@/interfaces/master'
 
 export type TemplateKey = 'pengadaan' | 'hibah' | 'bumdes' | 'sewa'

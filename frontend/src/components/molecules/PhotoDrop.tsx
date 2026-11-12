@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, type DragEvent } from 'react'
 import Image from 'next/image'

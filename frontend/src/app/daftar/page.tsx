@@ -1,4 +1,4 @@
-import DaftarTemplate from "@/components/organisms/DaftarTemplate";
+﻿import DaftarTemplate from "@/components/organisms/DaftarTemplate";
 import { pageMetadata } from "@/lib/seo/page-metadata";
 
 export const metadata = pageMetadata({

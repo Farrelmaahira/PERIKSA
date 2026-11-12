@@ -1,4 +1,4 @@
-import type { ContractTypeOption, Distractor, SignItem, SignedState, SimClause, SimStep } from '@/interfaces/simulator'
+﻿import type { ContractTypeOption, Distractor, SignItem, SignedState, SimClause, SimStep } from '@/interfaces/simulator'
 
 export const steps: SimStep[] = [
   {

@@ -1,9 +1,9 @@
-import type { AboutItem, FaqEntry, FlowItem } from "@/interfaces/content";
+﻿import type { AboutItem, FaqEntry, FlowItem } from "@/interfaces/content";
 
 export const about: AboutItem[] = [
   {
     title: "Apa itu PERIKSA",
-    text: "Platform digital rekam integritas kontrak desa dan UMKM: mulai dari penyusunan draf, audit kepatuhan berbasis AI, penandatanganan elektronik, segel integritas hash, hingga pengawasan publik yang transparan dan akuntabel.",
+    text: "Sistem kontrak digital untuk pemerintah desa dan UMKM. Kontrak disusun, diperiksa, disegel, lalu dibuka untuk publik.",
   },
   {
     title: "Kenapa dibuat",

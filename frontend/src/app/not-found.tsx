@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import NotFoundTemplate from "@/components/organisms/NotFoundTemplate";
 
 export const metadata: Metadata = { title: "Halaman tidak ditemukan" };

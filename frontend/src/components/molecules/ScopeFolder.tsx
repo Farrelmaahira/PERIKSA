@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+﻿import type { CSSProperties } from "react";
 import FolderPenIcon from "@/components/atoms/FolderPenIcon";
 import type { ScopeFolderItem } from "@/interfaces/content";
 

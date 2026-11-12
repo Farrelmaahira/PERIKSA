@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 interface Props<T extends string> { items: { key: T; label: string; count?: number }[]; value: T; onChange: (v: T) => void }
 

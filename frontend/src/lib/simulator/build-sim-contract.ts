@@ -1,4 +1,4 @@
-import { clauses } from '@/data/simulator'
+﻿import { clauses } from '@/data/simulator'
 import type { Contract } from '@/interfaces/contract'
 import { formatRp } from '@/lib/contracts/format-rp'
 import { today } from './today'

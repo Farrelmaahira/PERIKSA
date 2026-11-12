@@ -1,4 +1,4 @@
-import type { Clause } from '@/interfaces/drafting'
+﻿import type { Clause } from '@/interfaces/drafting'
 
 export const changedFrom = (prev: Clause[] | undefined, cl: Clause) => {
   if (!prev) return false

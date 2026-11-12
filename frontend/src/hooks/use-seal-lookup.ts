@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { verifySeal } from '@/lib/api/verify-seal'
 
 /* A full SHA-256 typed as the query is looked up on the server (GET /public/seals/verify). */

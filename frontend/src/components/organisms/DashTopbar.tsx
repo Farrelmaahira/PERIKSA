@@ -1,4 +1,4 @@
-import Icon from "@/components/atoms/Icon";
+﻿import Icon from "@/components/atoms/Icon";
 import DashUserMenu from "@/components/molecules/DashUserMenu";
 import { roleLabels } from "@/data/auth";
 import type { Session } from "@/interfaces/auth";

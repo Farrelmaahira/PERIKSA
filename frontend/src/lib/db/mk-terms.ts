@@ -1,4 +1,4 @@
-import type { Answers } from '@/interfaces/drafting'
+﻿import type { Answers } from '@/interfaces/drafting'
 import type { Term } from '@/interfaces/db'
 
 export function mkTerms(a: Answers, startIso: string): Term[] {

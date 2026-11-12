@@ -1,4 +1,4 @@
-import RevealEffect from "@/components/atoms/RevealEffect";
+﻿import RevealEffect from "@/components/atoms/RevealEffect";
 import AboutSection from "@/components/organisms/AboutSection";
 import CtaBand from "@/components/organisms/CtaBand";
 import FaqSection from "@/components/organisms/FaqSection";

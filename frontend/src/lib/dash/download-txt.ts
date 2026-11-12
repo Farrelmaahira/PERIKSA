@@ -1,4 +1,4 @@
-/* Simulated file download. Real PDFs come from the backend; the prototype writes plain text. */
+﻿/* Simulated file download. Real PDFs come from the backend; the prototype writes plain text. */
 
 export function downloadTxt(name: string, text: string) {
   const url = URL.createObjectURL(new Blob([text], { type: 'text/plain;charset=utf-8' }))

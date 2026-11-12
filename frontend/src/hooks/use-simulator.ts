@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useSimClauses } from '@/hooks/use-sim-clauses'
 import { useSimDrag } from '@/hooks/use-sim-drag'
 import { useSimSeal } from '@/hooks/use-sim-seal'

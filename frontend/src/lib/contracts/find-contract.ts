@@ -1,4 +1,4 @@
-import type { SealedContract } from '@/interfaces/contract'
+﻿import type { SealedContract } from '@/interfaces/contract'
 
 /* Matches a contract code, a full or partial hash, or the shortened "abc…xyz" form. */
 export function findContract(list: SealedContract[], raw: string) {

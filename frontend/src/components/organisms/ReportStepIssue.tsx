@@ -1,4 +1,4 @@
-import CategoryOption from "@/components/molecules/CategoryOption";
+﻿import CategoryOption from "@/components/molecules/CategoryOption";
 import ReportField from "@/components/molecules/ReportField";
 import { reportCategories } from "@/data/report-form";
 import type { SealedContract } from "@/interfaces/contract";

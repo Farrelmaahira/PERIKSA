@@ -1,4 +1,4 @@
-import Check from "@/components/atoms/Check";
+﻿import Check from "@/components/atoms/Check";
 
 interface Props {
   points: string[];

@@ -1,4 +1,4 @@
-import type { ApiNotification } from '@/interfaces/api'
+﻿import type { ApiNotification } from '@/interfaces/api'
 import type { Notif } from '@/interfaces/notifications'
 
 const TITLES: Record<string, string> = {

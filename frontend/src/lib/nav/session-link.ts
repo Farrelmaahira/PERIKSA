@@ -1,4 +1,4 @@
-import type { Session } from "@/interfaces/auth";
+﻿import type { Session } from "@/interfaces/auth";
 import type { NavLink } from "@/interfaces/content";
 
 /* The nav link that depends on whether someone is signed in. */

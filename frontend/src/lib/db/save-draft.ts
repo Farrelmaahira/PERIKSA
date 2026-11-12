@@ -1,4 +1,4 @@
-import type { Clause } from '@/interfaces/drafting'
+﻿import type { Clause } from '@/interfaces/drafting'
 import type { Session } from '@/interfaces/auth'
 import { find } from '@/lib/db/find'
 import { isEditable } from '@/lib/db/is-editable'

@@ -1,4 +1,4 @@
-import type { Clause } from '@/interfaces/drafting'
+﻿import type { Clause } from '@/interfaces/drafting'
 
 export interface AuditClausePayload {
   contractId: string;

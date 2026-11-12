@@ -1,4 +1,4 @@
-import MoneyBundle from '@/components/atoms/MoneyBundle'
+﻿import MoneyBundle from '@/components/atoms/MoneyBundle'
 import MoneyPile from '@/components/atoms/MoneyPile'
 
 export default function LoreSection() {

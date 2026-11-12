@@ -1,4 +1,4 @@
-import type { ApiNotification } from '@/interfaces/api'
+﻿import type { ApiNotification } from '@/interfaces/api'
 import { listNotifications } from '@/lib/api/list-notifications'
 import { readNotification } from '@/lib/api/read-notification'
 import { readAllNotifications } from '@/lib/api/read-all-notifications'

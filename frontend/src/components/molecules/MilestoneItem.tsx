@@ -1,4 +1,4 @@
-import Check from '@/components/atoms/Check'
+﻿import Check from '@/components/atoms/Check'
 import type { Milestone } from '@/interfaces/contract'
 
 interface Props {

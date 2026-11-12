@@ -1,4 +1,4 @@
-import Empty from "@/components/molecules/Empty";
+﻿import Empty from "@/components/molecules/Empty";
 import Btn from "@/components/atoms/Btn";
 
 export default function PageMissing() {

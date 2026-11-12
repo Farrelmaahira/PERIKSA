@@ -1,4 +1,4 @@
-import type { Contract } from '@/interfaces/contract'
+﻿import type { Contract } from '@/interfaces/contract'
 import { formatRp } from './format-rp'
 
 /* Canonical text that gets hashed. Any change to it changes the fingerprint. */

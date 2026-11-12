@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+﻿import type { ReactNode } from 'react'
 import Signature from '@/components/atoms/Signature'
 import SignatureImage from '@/components/atoms/SignatureImage'
 import type { Signature as SignatureData } from '@/interfaces/db'

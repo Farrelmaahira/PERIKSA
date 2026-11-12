@@ -1,4 +1,4 @@
-import { REPORT_KEY } from '@/data/storage-keys'
+﻿import { REPORT_KEY } from '@/data/storage-keys'
 import type { Report } from '@/interfaces/contract'
 import { readStorage } from './read-storage'
 

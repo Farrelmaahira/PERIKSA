@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+﻿import { useContext } from 'react'
 import { ConfirmContext, type Ask } from '@/contexts/confirm-context'
 
 /* `if (await confirm({ title, text, confirmLabel })) doIt()`; only usable inside DashLayout */

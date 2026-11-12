@@ -1,4 +1,4 @@
-interface Props {
+﻿interface Props {
   /* Serial number printed on the stamp once it has been applied */
   serial?: string
 }

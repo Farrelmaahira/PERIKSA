@@ -1,4 +1,4 @@
-import AboutCard from "@/components/molecules/AboutCard";
+﻿import AboutCard from "@/components/molecules/AboutCard";
 import FlowStep from "@/components/molecules/FlowStep";
 import { about, flow } from "@/data/simulasi";
 

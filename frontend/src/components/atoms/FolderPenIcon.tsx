@@ -1,4 +1,4 @@
-/* Same pen as Pen, without the mini-icon class: the folder AI tag sizes it itself. */
+﻿/* Same pen as Pen, without the mini-icon class: the folder AI tag sizes it itself. */
 export default function FolderPenIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">

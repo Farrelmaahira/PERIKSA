@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import ReportSection from "@/components/organisms/ReportSection";
 import TrackHero from "@/components/organisms/TrackHero";

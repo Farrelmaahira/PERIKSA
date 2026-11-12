@@ -1,4 +1,4 @@
-import BenefitsSection from "@/components/organisms/BenefitsSection";
+﻿import BenefitsSection from "@/components/organisms/BenefitsSection";
 import BriefSection from "@/components/organisms/BriefSection";
 import FeaturesSection from "@/components/organisms/FeaturesSection";
 import HomeEffects from "@/components/molecules/HomeEffects";

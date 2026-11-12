@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { signItems, unsigned } from '@/data/simulator'
 import type { SignedState } from '@/interfaces/simulator'
 

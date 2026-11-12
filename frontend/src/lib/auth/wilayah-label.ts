@@ -1,4 +1,4 @@
-import type { UserRole } from '@/interfaces/auth'
+﻿import type { UserRole } from '@/interfaces/auth'
 import { counterpartyById } from '@/lib/master/counterparty-by-id'
 import { regionById } from '@/lib/master/region-by-id'
 import { villageById } from '@/lib/master/village-by-id'

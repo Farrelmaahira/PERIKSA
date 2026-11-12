@@ -1,4 +1,4 @@
-import type { ApiResult } from '@/interfaces/api'
+﻿import type { ApiResult } from '@/interfaces/api'
 import { apiRequest } from '@/lib/api/api-request'
 
 /* DELETE /contracts/{id} (kades or perangkat desa of that village): soft-cancel, status becomes dibatalkan. 204 without a body.

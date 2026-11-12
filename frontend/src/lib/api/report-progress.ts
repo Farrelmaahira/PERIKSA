@@ -1,4 +1,4 @@
-import type { ApiResult, WorkProgress } from '@/interfaces/api'
+﻿import type { ApiResult, WorkProgress } from '@/interfaces/api'
 import { apiRequest } from '@/lib/api/api-request'
 
 interface Input { persenSelesai: number; catatan: string; termId?: number; fileIds?: number[]; buktiUrl?: string[] }

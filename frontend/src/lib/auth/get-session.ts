@@ -1,4 +1,4 @@
-import { SESSION_KEY } from '@/data/auth'
+﻿import { SESSION_KEY } from '@/data/auth'
 import type { Session } from '@/interfaces/auth'
 
 export function getSession(): Session | null {

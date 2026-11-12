@@ -1,4 +1,4 @@
-import Badge from "@/components/atoms/Badge";
+﻿import Badge from "@/components/atoms/Badge";
 import type { Counterparty } from "@/interfaces/master";
 import { cn } from "@/lib/utils";
 

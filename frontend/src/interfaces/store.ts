@@ -1,4 +1,4 @@
-export interface Store<T> {
+﻿export interface Store<T> {
   get: () => T;
   set: (fn: (prev: T) => T) => void;
   reset: () => void;

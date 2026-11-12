@@ -1,4 +1,4 @@
-import type { SealedContract } from '@/interfaces/contract'
+﻿import type { SealedContract } from '@/interfaces/contract'
 import type { TemplateKey } from '@/interfaces/drafting'
 import type { PublicContractDetail, PublicContractSummary } from '@/lib/api/reports'
 import { backendJenis, templates } from '@/data/drafting'

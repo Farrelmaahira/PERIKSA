@@ -1,1 +1,1 @@
-export const img = (name: string) => `/illustrations/${name}.svg`
+﻿export const img = (name: string) => `/illustrations/${name}.svg`

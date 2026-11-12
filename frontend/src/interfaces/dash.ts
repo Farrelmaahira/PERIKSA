@@ -1,4 +1,4 @@
-import type { ActionKind } from '@/interfaces/db'
+﻿import type { ActionKind } from '@/interfaces/db'
 import type { DContract } from '@/interfaces/db'
 import type { Session } from '@/interfaces/auth'
 import type { TerminListItem } from '@/interfaces/api'

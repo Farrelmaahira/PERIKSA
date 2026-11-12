@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { clauses, distractor } from '@/data/simulator'
 import { auditClause } from '@/lib/api/audit-clause'
 

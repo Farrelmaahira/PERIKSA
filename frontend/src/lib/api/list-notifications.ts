@@ -1,4 +1,4 @@
-import type { ApiResult, NotificationPage } from '@/interfaces/api'
+﻿import type { ApiResult, NotificationPage } from '@/interfaces/api'
 import { apiRequest } from '@/lib/api/api-request'
 
 /* GET /notifications, newest first; pass the previous page's nextBefore to load older ones. */

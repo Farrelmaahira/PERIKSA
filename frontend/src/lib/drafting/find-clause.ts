@@ -1,4 +1,4 @@
-import type { Clause } from "@/interfaces/drafting";
+﻿import type { Clause } from "@/interfaces/drafting";
 
 const TITLE: Record<string, RegExp> = {
   sanksi: /sanksi|denda/i,

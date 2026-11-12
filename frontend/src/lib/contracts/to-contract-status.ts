@@ -1,4 +1,4 @@
-import { statusLabels } from '@/data/db'
+﻿import { statusLabels } from '@/data/db'
 import type { ContractStatus } from '@/interfaces/db'
 
 /* The server's contract status as is; only an unknown or missing one falls back to "diaudit". */

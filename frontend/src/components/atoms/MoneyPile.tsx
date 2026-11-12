@@ -1,4 +1,4 @@
-/* Flat money drawings in the page palette, with a few pen strokes for motion. */
+﻿/* Flat money drawings in the page palette, with a few pen strokes for motion. */
 export default function MoneyPile() {
   return (
     <svg className="block h-auto mt-0 mx-auto mb-24 overflow-visible w-[min(24rem,_80%)] md:[.lore-side_&]:ml-0 md:[.lore-side.right_&]:ml-auto md:[.lore-side.right_&]:mr-0" viewBox="0 0 260 170" aria-hidden="true">

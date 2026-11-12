@@ -1,4 +1,4 @@
-import type { Session } from '@/interfaces/auth'
+﻿import type { Session } from '@/interfaces/auth'
 import { update } from '@/lib/db/update'
 import { nowIso } from '@/lib/dates/now-iso'
 

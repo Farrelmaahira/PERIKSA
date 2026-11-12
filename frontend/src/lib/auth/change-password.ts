@@ -1,4 +1,4 @@
-import type { Result } from "@/interfaces/auth";
+﻿import type { Result } from "@/interfaces/auth";
 import { checkPassword } from "./check-password";
 import { getSession } from "./get-session";
 import { hashPassword } from "./hash-password";

@@ -1,4 +1,4 @@
-import type { Result } from "@/interfaces/auth";
+﻿import type { Result } from "@/interfaces/auth";
 import { findUser } from "./find-user";
 import { isEmail } from "./is-email";
 

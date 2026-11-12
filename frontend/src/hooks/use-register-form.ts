@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+﻿import { useState, type FormEvent } from 'react'
 import { fieldStep } from '@/data/auth'
 import type { AuthError } from '@/interfaces/auth'
 import type { RegisterForm } from '@/interfaces/register'

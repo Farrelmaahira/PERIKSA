@@ -1,4 +1,4 @@
-import type { Result } from "@/interfaces/auth";
+﻿import type { Result } from "@/interfaces/auth";
 import type { CounterpartyType } from "@/interfaces/master";
 
 export function checkBusiness(

@@ -1,4 +1,4 @@
-import type { Result } from "@/interfaces/auth";
+﻿import type { Result } from "@/interfaces/auth";
 
 export function checkPassword(password: string, confirm: string): Result {
   if (password.length < 8)

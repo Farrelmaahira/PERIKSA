@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useReportPhotos } from '@/hooks/use-report-photos'
 import type { Report, SealedContract } from '@/interfaces/contract'
 import { submitReport } from '@/lib/api/submit-report'

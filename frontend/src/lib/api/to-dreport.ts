@@ -1,4 +1,4 @@
-import type { ActionKind, DReport, ReportFlow } from '@/interfaces/db'
+﻿import type { ActionKind, DReport, ReportFlow } from '@/interfaces/db'
 import type { CreatedReportResponse } from '@/lib/api/reports'
 
 const KINDS: ActionKind[] = ['tanggapan', 'klarifikasi', 'verifikasi', 'eskalasi', 'selesai', 'tindak_lanjut', 'tutup']

@@ -1,4 +1,4 @@
-import type { VerifyEmailResult } from '@/interfaces/auth'
+﻿import type { VerifyEmailResult } from '@/interfaces/auth'
 import { verifyEmail } from './verify-email'
 
 // Tokens are single use; remember the outcome so a re-render (or StrictMode) shows the same result.

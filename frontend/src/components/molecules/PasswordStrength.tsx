@@ -1,4 +1,4 @@
-import { strengthLabel } from '@/data/auth'
+﻿import { strengthLabel } from '@/data/auth'
 import { passwordStrength } from '@/lib/auth/password-strength'
 
 interface Props {

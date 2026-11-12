@@ -1,4 +1,4 @@
-import VerifyDoc from './VerifyDoc'
+﻿import VerifyDoc from './VerifyDoc'
 
 interface Props {
   onOpen: (code: string) => void

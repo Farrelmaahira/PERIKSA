@@ -1,4 +1,4 @@
-import { useMemo, useSyncExternalStore } from 'react'
+﻿import { useMemo, useSyncExternalStore } from 'react'
 import { SESSION_KEY } from '@/data/auth'
 import type { Session } from '@/interfaces/auth'
 import { getSession } from '@/lib/auth/get-session'

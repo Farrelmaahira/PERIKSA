@@ -1,4 +1,4 @@
-export interface PublicContractSummary {
+﻿export interface PublicContractSummary {
   id: number
   nomor: string
   judul: string

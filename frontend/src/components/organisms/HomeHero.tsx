@@ -1,4 +1,4 @@
-import HeroBg from '@/components/atoms/HeroBg'
+﻿import HeroBg from '@/components/atoms/HeroBg'
 import PillButton from '@/components/atoms/PillButton'
 import Underline from '@/components/atoms/Underline'
 import ScrollLink from '@/components/molecules/ScrollLink'
@@ -12,12 +12,12 @@ export default function HomeHero() {
           <h1>
             Setiap rupiah dana desa punya{' '}
             <span className="inline-block relative [.auth-title_&]:whitespace-nowrap [.page-title_&]:whitespace-nowrap">
-              rekam integritas.
+              periksa.
               <Underline className="bottom-[-0.12em] h-[0.28em] left-[-2%] absolute w-[104%]" />
             </span>
           </h1>
           <p>
-            <strong>PERIKSA</strong> (Platform Elektronik Rekam Integritas Kontrak Sistem Akuntabel) — platform digital rekam integritas kontrak desa dan UMKM: penyusunan draf, audit kepatuhan AI, segel integritas hash, dan pengawasan publik.
+            <strong>PERIKSA</strong>, Platform Elektronik Rekam Integritas Kontrak Sistem Akuntabel. Sistem kontrak digital untuk pemerintah desa dan UMKM.
           </p>
           <div className="items-center flex gap-30">
             <PillButton href="#masalah">Kenapa penting</PillButton>

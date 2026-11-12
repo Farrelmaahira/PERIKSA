@@ -1,4 +1,4 @@
-/* One seal check: the file's SHA-256 and, when GET /public/seals/verify matched it, the sealed contract */
+﻿/* One seal check: the file's SHA-256 and, when GET /public/seals/verify matched it, the sealed contract */
 export interface VerifyResult {
   name: string
   hash: string

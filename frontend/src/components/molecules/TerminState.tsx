@@ -1,4 +1,4 @@
-import type { ApiResult } from '@/interfaces/api'
+﻿import type { ApiResult } from '@/interfaces/api'
 import FormAlert from '@/components/atoms/FormAlert'
 
 interface Props { result?: ApiResult<unknown> }

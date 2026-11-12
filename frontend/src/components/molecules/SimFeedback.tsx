@@ -1,4 +1,4 @@
-import Cross from '@/components/atoms/Cross'
+﻿import Cross from '@/components/atoms/Cross'
 
 interface Props {
   message: string | null

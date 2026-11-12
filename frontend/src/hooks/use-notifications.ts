@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useEffect, useSyncExternalStore } from 'react'
 import { notifStore } from '@/lib/notifications/notif-store'

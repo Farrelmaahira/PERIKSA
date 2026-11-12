@@ -1,4 +1,4 @@
-import type { ApiResult } from '@/interfaces/api'
+﻿import type { ApiResult } from '@/interfaces/api'
 import { apiRequest } from '@/lib/api/api-request'
 
 /* POST /notifications/{id}/read (204). */

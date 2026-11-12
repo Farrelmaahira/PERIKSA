@@ -1,4 +1,4 @@
-import type { TokenKind } from '@/interfaces/auth'
+﻿import type { TokenKind } from '@/interfaces/auth'
 import { tokens } from './tokens-store'
 
 export function issueToken(userId: string, kind: TokenKind, minutes: number) {

@@ -1,4 +1,4 @@
-import MailPreview from "@/components/molecules/MailPreview";
+﻿import MailPreview from "@/components/molecules/MailPreview";
 import StepIndicator from "@/components/molecules/StepIndicator";
 import { verifySteps } from "@/data/auth";
 

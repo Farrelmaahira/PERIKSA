@@ -1,4 +1,4 @@
-export function passwordStrength(pw: string) {
+﻿export function passwordStrength(pw: string) {
   let s = 0
   if (pw.length >= 8) s++
   if (/\d/.test(pw) && /[a-zA-Z]/.test(pw)) s++

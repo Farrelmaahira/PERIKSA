@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+﻿import type { ReactNode } from "react";
 import Illustration from "@/components/atoms/Illustration";
 import type { IllustrationName } from "@/data/illustrations";
 

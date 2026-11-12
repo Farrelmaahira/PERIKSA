@@ -1,4 +1,4 @@
-import type { Token, TokenKind } from "@/interfaces/auth";
+﻿import type { Token, TokenKind } from "@/interfaces/auth";
 import { tokens } from "./tokens-store";
 
 export function readToken(

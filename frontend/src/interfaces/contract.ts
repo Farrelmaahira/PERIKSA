@@ -1,4 +1,4 @@
-/* Dummy contract registry shapes for the design prototype. No API: data lives in data/ and in localStorage. */
+﻿/* Dummy contract registry shapes for the design prototype. No API: data lives in data/ and in localStorage. */
 
 export type MilestoneStatus = "done" | "current" | "pending";
 

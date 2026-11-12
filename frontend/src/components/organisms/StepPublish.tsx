@@ -1,4 +1,4 @@
-import Illustration from '@/components/atoms/Illustration'
+﻿import Illustration from '@/components/atoms/Illustration'
 import Check from '@/components/atoms/Check'
 import PillButton from '@/components/atoms/PillButton'
 import { clauses } from '@/data/simulator'

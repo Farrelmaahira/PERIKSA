@@ -1,4 +1,4 @@
-import type { Finding } from "@/interfaces/drafting";
+﻿import type { Finding } from "@/interfaces/drafting";
 
 export const scoreOf = (findings: Finding[]) =>
   Math.max(

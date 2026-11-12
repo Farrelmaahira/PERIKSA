@@ -1,4 +1,4 @@
-import type { CounterpartyType } from './master'
+﻿import type { CounterpartyType } from './master'
 
 export type RoleKey = 'perangkat_desa' | 'pihak_kedua' | 'bpd' | 'inspektorat' | 'warga' | 'admin_daerah'
 

@@ -1,4 +1,4 @@
-import type { DContract } from "@/interfaces/db";
+﻿import type { DContract } from "@/interfaces/db";
 import Link from "next/link";
 import StatusBadge from "@/components/atoms/StatusBadge";
 import Bar from "@/components/atoms/Bar";

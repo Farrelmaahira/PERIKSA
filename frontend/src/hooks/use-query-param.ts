@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+﻿import { useSyncExternalStore } from "react";
 
 const subscribe = (cb: () => void) => {
   window.addEventListener("popstate", cb);

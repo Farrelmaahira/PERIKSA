@@ -1,4 +1,4 @@
-import type { Db } from '@/interfaces/db'
+﻿import type { Db } from '@/interfaces/db'
 import type { UserRole } from '@/interfaces/auth'
 import { scopeContracts } from '@/lib/db/scope-contracts'
 import { allReports } from '@/lib/db/all-reports'

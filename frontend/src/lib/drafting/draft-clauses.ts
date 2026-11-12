@@ -1,4 +1,4 @@
-import type { Answers, Clause, Ctx, TemplateKey } from '@/interfaces/drafting'
+﻿import type { Answers, Clause, Ctx, TemplateKey } from '@/interfaces/drafting'
 import { VAGUE_SANCTION, extra, legal, objectLegal, objectText } from '@/data/drafting'
 import { formatRp } from '@/lib/contracts/format-rp'
 import { fmtDate } from '@/lib/dates/fmt-date'

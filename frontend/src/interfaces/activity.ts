@@ -1,4 +1,4 @@
-/* One line of an activity feed ("Hendra Wijaya menandatangani kontrak ..."). */
+﻿/* One line of an activity feed ("Hendra Wijaya menandatangani kontrak ..."). */
 export interface ActivityItem {
   id: string
   at: string

@@ -1,4 +1,4 @@
-import type { ApiResult, ContractTermin } from '@/interfaces/api'
+﻿import type { ApiResult, ContractTermin } from '@/interfaces/api'
 import { apiRequest } from '@/lib/api/api-request'
 
 /* PUT /contracts/{id}/spk (desa). Dates YYYY-MM-DD. A published contract becomes berjalan. */

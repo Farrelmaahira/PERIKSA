@@ -1,4 +1,4 @@
-import type { TemplateKey } from '@/interfaces/drafting'
+﻿import type { TemplateKey } from '@/interfaces/drafting'
 
 export const titleFor = (t: TemplateKey, work: string) => {
   const w = work.trim().replace(/\.$/, '')

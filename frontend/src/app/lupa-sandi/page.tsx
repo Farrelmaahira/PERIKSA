@@ -1,9 +1,9 @@
-import LupaSandiTemplate from "@/components/organisms/LupaSandiTemplate";
+﻿import LupaSandiTemplate from "@/components/organisms/LupaSandiTemplate";
 import { pageMetadata } from "@/lib/seo/page-metadata";
 
 export const metadata = pageMetadata({
   title: "Lupa kata sandi",
-  description: "Atur ulang kata sandi akun PERIKSA Anda.",
+  description: "Lupa kata sandi akun PERIKSA? Masukkan email Anda dan kami kirim link untuk membuat kata sandi baru dengan aman.",
   path: "/lupa-sandi",
   noindex: true,
 });

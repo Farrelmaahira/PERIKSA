@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import FormAlert from '@/components/atoms/FormAlert'
 import PillButton from '@/components/atoms/PillButton'
 import DemoAccounts from '@/components/molecules/DemoAccounts'
@@ -18,10 +18,9 @@ interface Props {
   onPassword: (v: string) => void
   onResend: () => void
   onPickDemo: (email: string, password: string) => void
-  onDirectLogin?: (email: string, password: string) => void
 }
 
-export default function LoginCredentialsStep({ email, password, error, busy, resent, onEmail, onPassword, onResend, onPickDemo, onDirectLogin }: Props) {
+export default function LoginCredentialsStep({ email, password, error, busy, resent, onEmail, onPassword, onResend, onPickDemo }: Props) {
   const fieldError = (f: string) => (error?.field === f ? error.error : undefined)
 
   return (
@@ -79,7 +78,7 @@ export default function LoginCredentialsStep({ email, password, error, busy, res
       <PillButton type="submit" tone="blue" disabled={busy}>
         {busy ? 'Memeriksa…' : 'Masuk'}
       </PillButton>
-      <DemoAccounts onPick={onPickDemo} onDirectLogin={onDirectLogin} />
+      <DemoAccounts onPick={onPickDemo} />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import type { Answers } from '@/interfaces/drafting'
+﻿import type { Answers } from '@/interfaces/drafting'
 import { daysFromNow } from '@/lib/dates/days-from-now'
 
 /* Field errors of the questions step; an empty object means the answers are valid. */

@@ -1,4 +1,4 @@
-import type { ApiResult, AuditReport } from '@/interfaces/api'
+﻿import type { ApiResult, AuditReport } from '@/interfaces/api'
 import { apiRequest } from '@/lib/api/api-request'
 
 /* GET /audit-reports (LHP list, without findings), newest first. */

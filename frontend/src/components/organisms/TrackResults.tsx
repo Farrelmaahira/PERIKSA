@@ -1,4 +1,4 @@
-import type { Ref } from 'react'
+﻿import type { Ref } from 'react'
 import FormAlert from '@/components/atoms/FormAlert'
 import Illustration from '@/components/atoms/Illustration'
 import OpenContractCard from '@/components/molecules/OpenContractCard'

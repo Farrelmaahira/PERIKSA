@@ -1,4 +1,4 @@
-import FaqItem from "@/components/molecules/FaqItem";
+﻿import FaqItem from "@/components/molecules/FaqItem";
 import { faq } from "@/data/simulasi";
 
 export default function FaqSection() {

@@ -1,4 +1,4 @@
-import type { ApiResult } from "@/interfaces/api";
+﻿import type { ApiResult } from "@/interfaces/api";
 import { getAuthToken } from "@/lib/api/reports";
 import { logout } from "@/lib/auth/logout";
 
@@ -88,5 +88,3 @@ export async function apiRequest<T>(
       (text || `Server menolak permintaan (kode ${res.status}).`),
   };
 }
-
-

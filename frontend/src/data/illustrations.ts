@@ -1,4 +1,4 @@
-/* Intrinsic sizes of public/illustrations, so next/image reserves the same box the plain <img> had. */
+﻿/* Intrinsic sizes of public/illustrations, so next/image reserves the same box the plain <img> had. */
 export const illustrations = {
   'all-checked_d3u6': { width: 960, height: 748 },
   'contract-signed_vutk': { width: 525, height: 728 },

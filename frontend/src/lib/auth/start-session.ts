@@ -1,4 +1,4 @@
-import type { StoredUser, UserRole } from '@/interfaces/auth'
+﻿import type { StoredUser, UserRole } from '@/interfaces/auth'
 import { setSession } from './set-session'
 
 export function startSession(u: StoredUser, role: UserRole) {

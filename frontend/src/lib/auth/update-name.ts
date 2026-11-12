@@ -1,4 +1,4 @@
-import type { Result } from '@/interfaces/auth'
+﻿import type { Result } from '@/interfaces/auth'
 import { getSession } from './get-session'
 import { setSession } from './set-session'
 import { updateUser } from './update-user'

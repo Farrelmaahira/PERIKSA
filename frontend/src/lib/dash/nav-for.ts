@@ -1,4 +1,4 @@
-import type { RoleKey } from '@/interfaces/auth'
+﻿import type { RoleKey } from '@/interfaces/auth'
 import type { NavCounts, NavItem } from '@/interfaces/dash'
 
 /* Sidebar entries per role */

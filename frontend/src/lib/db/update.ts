@@ -1,4 +1,4 @@
-import type { DContract } from '@/interfaces/db'
+﻿import type { DContract } from '@/interfaces/db'
 import { db } from '@/lib/db/db'
 
 export function update(code: string, fn: (c: DContract) => DContract) {

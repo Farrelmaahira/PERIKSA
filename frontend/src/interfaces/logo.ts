@@ -1,1 +1,1 @@
-export type LogoTone = 'color' | 'white' | 'black'
+﻿export type LogoTone = 'color' | 'white' | 'black'

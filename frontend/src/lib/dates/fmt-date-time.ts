@@ -1,4 +1,4 @@
-import { fmtDate } from './fmt-date'
+﻿import { fmtDate } from './fmt-date'
 
 export function fmtDateTime(iso: string) {
   const d = new Date(iso)

@@ -1,4 +1,4 @@
-import type { RegisterInput, RegisterResult, StoredUser } from '@/interfaces/auth'
+﻿import type { RegisterInput, RegisterResult, StoredUser } from '@/interfaces/auth'
 import type { CounterpartyType } from '@/interfaces/master'
 import { nowIso } from '@/lib/dates/now-iso'
 import { uid } from '@/lib/dates/uid'

@@ -1,4 +1,4 @@
-import { SIM_KEY } from '@/data/storage-keys'
+﻿import { SIM_KEY } from '@/data/storage-keys'
 import type { Contract } from '@/interfaces/contract'
 import { loadSimContracts } from './load-sim-contracts'
 

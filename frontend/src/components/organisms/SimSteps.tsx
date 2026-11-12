@@ -1,4 +1,4 @@
-import { DndContext, DragOverlay } from "@dnd-kit/core";
+﻿import { DndContext, DragOverlay } from "@dnd-kit/core";
 import DragPreview from "@/components/molecules/DragPreview";
 import type { useSimulator } from "@/hooks/use-simulator";
 import StepClauses from "./StepClauses";

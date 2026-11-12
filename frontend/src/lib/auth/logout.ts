@@ -1,4 +1,4 @@
-import { setAuthToken } from '@/lib/api/reports'
+﻿import { setAuthToken } from '@/lib/api/reports'
 import { setSession } from './set-session'
 
 export function logout() {

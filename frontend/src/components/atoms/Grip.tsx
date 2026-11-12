@@ -1,4 +1,4 @@
-export default function Grip() {
+﻿export default function Grip() {
   return (
     <svg className="[fill:currentColor] flex-none h-16 opacity-[0.35] w-10" viewBox="0 0 10 16" aria-hidden="true">
       {[3, 8, 13].map((y) => (

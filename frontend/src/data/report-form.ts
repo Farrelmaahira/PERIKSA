@@ -1,4 +1,4 @@
-import type { ReportCategory } from '@/interfaces/content'
+﻿import type { ReportCategory } from '@/interfaces/content'
 
 export const reportCategories: ReportCategory[] = [
   { title: 'Pekerjaan tidak sesuai kontrak', note: 'Jumlah, ukuran, atau kualitas berbeda' },

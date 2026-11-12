@@ -1,4 +1,4 @@
-import type { Db } from '@/interfaces/db'
+﻿import type { Db } from '@/interfaces/db'
 import type { UserRole } from '@/interfaces/auth'
 import { regionOfContract } from '@/lib/db/region-of-contract'
 

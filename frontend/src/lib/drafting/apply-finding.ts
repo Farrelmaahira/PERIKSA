@@ -1,4 +1,4 @@
-import type { Answers, Clause, TemplateKey } from "@/interfaces/drafting";
+﻿import type { Answers, Clause, TemplateKey } from "@/interfaces/drafting";
 import { legal, objectText, sanctionFix } from "@/data/drafting";
 import { findClause } from "@/lib/drafting/find-clause";
 

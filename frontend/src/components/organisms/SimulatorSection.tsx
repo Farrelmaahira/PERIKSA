@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+﻿import { Suspense } from "react";
 import Simulator from "./SimulatorLazy";
 
 export default function SimulatorSection() {

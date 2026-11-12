@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import { SITE_NAME, SITE_OG_IMAGE } from '@/data/site'
 import type { PageMetadataOptions } from '@/interfaces/seo'
 

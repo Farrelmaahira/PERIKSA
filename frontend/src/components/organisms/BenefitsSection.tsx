@@ -1,4 +1,4 @@
-import BenefitCard from "@/components/molecules/BenefitCard";
+﻿import BenefitCard from "@/components/molecules/BenefitCard";
 import { benefits } from "@/data/home";
 
 export default function BenefitsSection() {

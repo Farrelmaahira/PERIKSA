@@ -1,4 +1,4 @@
-import type { DContract } from '@/interfaces/db'
+﻿import type { DContract } from '@/interfaces/db'
 import { isActive } from '@/lib/db/is-active'
 import { progressOf } from '@/lib/db/progress-of'
 import { daysUntil } from '@/lib/dates/days-until'

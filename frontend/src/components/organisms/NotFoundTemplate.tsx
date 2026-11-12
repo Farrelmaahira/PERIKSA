@@ -1,4 +1,4 @@
-import HeroBg from '@/components/atoms/HeroBg'
+﻿import HeroBg from '@/components/atoms/HeroBg'
 import PillButton from '@/components/atoms/PillButton'
 
 export default function NotFoundTemplate() {

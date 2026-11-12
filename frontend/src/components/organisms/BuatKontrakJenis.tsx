@@ -1,4 +1,4 @@
-import StepTitle from '@/components/atoms/StepTitle'
+﻿import StepTitle from '@/components/atoms/StepTitle'
 import TemplateCard from '@/components/molecules/TemplateCard'
 import type { TemplateKey } from '@/interfaces/drafting'
 import { templates } from '@/data/drafting'

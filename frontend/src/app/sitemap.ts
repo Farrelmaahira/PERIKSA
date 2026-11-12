@@ -1,4 +1,4 @@
-import type { MetadataRoute } from "next";
+﻿import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/data/site";
 
 // Only public pages. The dashboard and the token pages (verify email, reset password) stay out.

@@ -1,4 +1,4 @@
-import type { DContract, Version } from '@/interfaces/db'
+﻿import type { DContract, Version } from '@/interfaces/db'
 import { downloadTxt } from '@/lib/dash/download-txt'
 
 /* Saves one contract version as a text file; the prototype has no real PDF, so the name says so. */

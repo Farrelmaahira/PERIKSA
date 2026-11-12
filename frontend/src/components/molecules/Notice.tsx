@@ -1,4 +1,4 @@
-interface Props { msg: { ok: boolean; text: string } | null }
+﻿interface Props { msg: { ok: boolean; text: string } | null }
 
 export default function Notice({ msg }: Props) {
   if (!msg) return null

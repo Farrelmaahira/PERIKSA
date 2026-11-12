@@ -1,4 +1,4 @@
-/* Pages a citizen account may open */
+﻿/* Pages a citizen account may open */
 const exactPages = [
   '/dashboard',
   '/dashboard/kontrak',

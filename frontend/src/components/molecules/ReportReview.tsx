@@ -1,4 +1,4 @@
-import type { SealedContract } from '@/interfaces/contract'
+﻿import type { SealedContract } from '@/interfaces/contract'
 
 interface Props {
   contract: SealedContract

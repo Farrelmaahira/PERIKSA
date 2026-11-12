@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+﻿import type { ReactNode } from 'react'
 
 // full class names on purpose: Tailwind only generates classes it can read literally from the source
 const FIELD = [

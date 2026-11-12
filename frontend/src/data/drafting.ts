@@ -1,4 +1,4 @@
-import type { Answers, Clause, TemplateInfo, TemplateKey } from '@/interfaces/drafting'
+﻿import type { Answers, Clause, TemplateInfo, TemplateKey } from '@/interfaces/drafting'
 
 export const templates: Record<TemplateKey, TemplateInfo> = {
   pengadaan: {

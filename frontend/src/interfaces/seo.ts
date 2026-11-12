@@ -1,4 +1,4 @@
-export interface PageMetadataOptions {
+﻿export interface PageMetadataOptions {
   title: string
   description: string
   path: string

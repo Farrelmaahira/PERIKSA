@@ -1,4 +1,4 @@
-import type { Clause } from '@/interfaces/contract'
+﻿import type { Clause } from '@/interfaces/contract'
 
 const HEADING = /^pasal\s+\d+\s*[.:\-–]?\s*/i
 

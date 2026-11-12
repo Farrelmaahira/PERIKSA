@@ -1,4 +1,4 @@
-import { steps } from "@/data/simulator";
+﻿import { steps } from "@/data/simulator";
 
 interface Props {
   step: number;

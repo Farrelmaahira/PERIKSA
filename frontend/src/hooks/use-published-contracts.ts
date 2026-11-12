@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import type { SealedContract } from '@/interfaces/contract'
 import { listPublicContracts } from '@/lib/api/list-public-contracts'
 import { toSealedContract } from '@/lib/api/to-sealed-contract'

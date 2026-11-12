@@ -1,4 +1,4 @@
-import { findUser } from './find-user'
+﻿import { findUser } from './find-user'
 import { issueToken } from './issue-token'
 
 export function resendVerification(email: string) {

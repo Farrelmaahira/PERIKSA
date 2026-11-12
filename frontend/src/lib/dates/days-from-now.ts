@@ -1,4 +1,4 @@
-import { DAY_MS } from '@/data/time'
+﻿import { DAY_MS } from '@/data/time'
 
 /* ISO date (YYYY-MM-DD) relative to today, used so the demo data always looks current */
 export function daysFromNow(n: number) {

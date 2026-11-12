@@ -1,4 +1,4 @@
-import { getSession } from './get-session'
+﻿import { getSession } from './get-session'
 import { setSession } from './set-session'
 
 export function switchRole(roleId: string) {

@@ -1,4 +1,4 @@
-import Grip from "@/components/atoms/Grip";
+﻿import Grip from "@/components/atoms/Grip";
 import { clauses, distractor, signItems, types } from "@/data/simulator";
 import TypeCardBody from "./TypeCardBody";
 

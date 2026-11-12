@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+﻿import { useEffect, useRef } from 'react'
 
 /* Scrolls the element into view when `key` changes (not on the first render), if its top is above the viewport. */
 export function useScrollOnChange<T extends HTMLElement>(key: unknown) {

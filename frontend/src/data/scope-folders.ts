@@ -1,4 +1,4 @@
-import type { ScopeFolderItem } from "@/interfaces/content";
+﻿import type { ScopeFolderItem } from "@/interfaces/content";
 
 export const scopeFolders: ScopeFolderItem[] = [
   {

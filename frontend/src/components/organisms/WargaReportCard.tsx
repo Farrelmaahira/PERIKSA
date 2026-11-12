@@ -1,4 +1,4 @@
-import Link from 'next/link'
+﻿import Link from 'next/link'
 import Icon from '@/components/atoms/Icon'
 import FlowBadge from '@/components/atoms/FlowBadge'
 import ReportThread from '@/components/molecules/ReportThread'

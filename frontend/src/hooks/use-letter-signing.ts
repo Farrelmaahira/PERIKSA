@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import type { Meterai, Signature } from '@/interfaces/db'
 import { nowIso } from '@/lib/dates/now-iso'
 import { newMeteraiSerial } from '@/lib/db/new-meterai-serial'

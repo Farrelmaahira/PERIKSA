@@ -1,4 +1,4 @@
-import type { TerminLine } from '@/interfaces/dash'
+﻿import type { TerminLine } from '@/interfaces/dash'
 import PageHead from '@/components/molecules/PageHead'
 import Stat from '@/components/molecules/Stat'
 import { formatRp } from '@/lib/contracts/format-rp'

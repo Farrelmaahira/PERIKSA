@@ -1,4 +1,4 @@
-import type { NavItem } from '@/interfaces/dash'
+﻿import type { NavItem } from '@/interfaces/dash'
 
 // "Kontrak" stays highlighted on contract detail pages, but not on "Buat Kontrak"
 export const isNavOn = (i: NavItem, path: string) =>
