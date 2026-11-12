@@ -169,6 +169,24 @@ func contractLink(id int64) string { return fmt.Sprintf("/dashboard/kontrak/%d",
 // ---- Kirim ke pihak kedua ----
 
 // SendContract: draf/diaudit -> ditinjau. Riwayat status, audit log, dan notifikasi pihak kedua dalam satu transaksi.
+// stringsOf membaca satu kolom teks dari semua baris hasil query.
+func stringsOf(ctx context.Context, tx pgx.Tx, sql string, args ...any) ([]string, error) {
+	rows, err := tx.Query(ctx, sql, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []string
+	for rows.Next() {
+		var v string
+		if err := rows.Scan(&v); err != nil {
+			return nil, err
+		}
+		out = append(out, v)
+	}
+	return out, rows.Err()
+}
+
 func (s *Store) SendContract(ctx context.Context, p usecase.SendContractParams) (int64, error) {
 	tx, err := s.db.Begin(ctx)
 	if err != nil {
@@ -186,25 +204,52 @@ func (s *Store) SendContract(ctx context.Context, p usecase.SendContractParams) 
 	if err := usecase.CanSend(lc.Status); err != nil {
 		return 0, err
 	}
-	var hasParty, critical bool
-	if err := tx.QueryRow(ctx, `SELECT
-		EXISTS (SELECT 1 FROM contract_parties WHERE contract_id = $1 AND peran_pihak = 'kedua'),
-		EXISTS (SELECT 1 FROM ai_audit_findings f WHERE f.tingkat = 'kritis' AND NOT f.sudah_diperbaiki AND f.audit_id = (
-			SELECT a.id FROM ai_audits a JOIN contract_versions cv ON cv.id = a.version_id
-			WHERE cv.contract_id = $1 ORDER BY a.id DESC LIMIT 1))`, p.ContractID).Scan(&hasParty, &critical); err != nil {
+	var hasParty bool
+	if err := tx.QueryRow(ctx, `SELECT EXISTS (SELECT 1 FROM contract_parties WHERE contract_id = $1 AND peran_pihak = 'kedua')`,
+		p.ContractID).Scan(&hasParty); err != nil {
 		return 0, err
 	}
 	if !hasParty {
 		return 0, fmt.Errorf("%w: kontrak belum punya pihak kedua", domain.ErrInvalidState)
 	}
-	if critical {
-		return 0, domain.ErrCriticalFindings
+	present, err := stringsOf(ctx, tx, `SELECT kode_pasal FROM contract_clauses WHERE version_id = (
+		SELECT id FROM contract_versions WHERE contract_id = $1 ORDER BY nomor_versi DESC LIMIT 1)`, p.ContractID)
+	if err != nil {
+		return 0, err
+	}
+	rows, err := tx.Query(ctx, `SELECT f.kode_pasal, f.pesan FROM ai_audit_findings f
+		WHERE f.tingkat = 'kritis' AND NOT f.sudah_diperbaiki AND f.audit_id = (
+			SELECT a.id FROM ai_audits a JOIN contract_versions cv ON cv.id = a.version_id
+			WHERE cv.contract_id = $1 ORDER BY a.id DESC LIMIT 1) ORDER BY f.id`, p.ContractID)
+	if err != nil {
+		return 0, err
+	}
+	var llmKritis []domain.AuditFinding
+	for rows.Next() {
+		f := domain.AuditFinding{Tingkat: "kritis", Sumber: domain.SumberLLM}
+		if err := rows.Scan(&f.KodePasal, &f.Pesan); err != nil {
+			rows.Close()
+			return 0, err
+		}
+		llmKritis = append(llmKritis, f)
+	}
+	rows.Close()
+	if err := rows.Err(); err != nil {
+		return 0, err
+	}
+	confirmed, err := usecase.SendGate(p.MandatoryKodePasal, present, llmKritis, p.KonfirmasiTemuanKritis)
+	if err != nil {
+		return 0, err
 	}
 	if err := setStatusTx(ctx, tx, p.ContractID, lc.Status, domain.StatusInReview, p.Scope.UserID); err != nil {
 		return 0, err
 	}
+	sesudah := map[string]any{"status": domain.StatusInReview}
+	if len(confirmed) > 0 {
+		sesudah["temuanKritisDikonfirmasi"] = confirmed
+	}
 	if err := insertAuditLog(ctx, tx, p.Scope.UserID, "contract.send", p.ContractID,
-		map[string]any{"status": lc.Status}, map[string]any{"status": domain.StatusInReview}, p.ActorIP); err != nil {
+		map[string]any{"status": lc.Status}, sesudah, p.ActorIP); err != nil {
 		return 0, err
 	}
 	vendor, err := vendorUserID(ctx, tx, p.ContractID)
