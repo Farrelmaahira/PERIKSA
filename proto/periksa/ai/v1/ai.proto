@@ -48,37 +48,31 @@ message DraftContractRequest {
   ContractType jenis = 1;
   map<string, string> jawaban = 2;          // jawaban_form wizard
   repeated Clause clause_library = 3;       // template + pasal wajib dari clause_library
+  repeated LegalReference legal_references = 4;
 }
 
 message DraftContractResponse {
   repeated Clause clauses = 1;
-  string reasoning = 2;
-}
-
-message AuditFinding {
-  string kode_pasal = 1;
-  Severity severity = 2;
-  string isu = 3;
-  string rekomendasi = 4;
-  int64 legal_reference_id = 5;
+  string model = 2;                          // "groq:<model>" / "gemini:<model>"
 }
 
 message AuditContractRequest {
   ContractType jenis = 1;
   repeated Clause clauses = 2;
-  repeated Clause mandatory_clauses = 3;
+  repeated string mandatory_kode_pasal = 3;  // clause_library.wajib = true
+  repeated LegalReference legal_references = 4;
+}
+
+message Finding {
+  string kode_pasal = 1;   // kosong = temuan umum
+  Severity tingkat = 2;
+  string pesan = 3;
 }
 
 message AuditContractResponse {
-  int32 skor_kepatuhan = 1;     // 0 - 100
-  repeated AuditFinding temuan = 2;
-  string ringkasan = 3;
-}
-
-message RedactSpan {
-  int32 start = 1;
-  int32 end = 2;
-  string category = 3;          // NIK, NAMA, REKENING, TELEPON, EMAIL
+  repeated Finding findings = 1;
+  double skor = 2;         // 0..100
+  string model = 3;
 }
 
 message RedactTextRequest {
@@ -86,6 +80,6 @@ message RedactTextRequest {
 }
 
 message RedactTextResponse {
-  string redacted_text = 1;
-  repeated RedactSpan spans = 2;
+  string text = 1;
+  repeated string redacted_kinds = 2;  // mis. "nik", "no_hp", "email", "alamat"
 }
