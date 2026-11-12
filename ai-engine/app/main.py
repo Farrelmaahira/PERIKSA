@@ -1,39 +1,53 @@
+import hmac
+import logging
 import os
-from fastapi import FastAPI
-from pydantic import BaseModel
+from contextlib import asynccontextmanager
 
-app = FastAPI(
-    title="PERIKSA AI Engine",
-    description="Layanan AI untuk Penyusunan, Audit Kepatuhan, dan Redaksi Kontrak PERIKSA",
-    version="0.1.0",
-)
+from fastapi import Depends, FastAPI, Header, HTTPException
 
+from app import grpc_server
+from app.llm import BUSY_MESSAGE, LlmUnavailable, chain
+from app.rest_audit import AuditRequest, AuditResponse, run_audit
 
-class HealthResponse(BaseModel):
-    status: str
-    service: str
-    platform: str
+log = logging.getLogger("ai-engine")
 
-
-@app.get("/health", response_model=HealthResponse)
-async def health_check():
-    return HealthResponse(
-        status="ok",
-        service="periksa-ai-engine",
-        platform="Platform Elektronik Rekam Integritas Kontrak Sistem Akuntabel",
-    )
+API_KEY = os.environ.get("AI_API_KEY", "")
+if not API_KEY:
+    raise RuntimeError("AI_API_KEY wajib diatur (harus sama dengan AI_API_KEY di backend)")
 
 
-@app.get("/")
-async def root():
-    return {
-        "message": "Selamat datang di PERIKSA AI Engine",
-        "docs": "/docs",
-    }
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    server = None
+    port = int(os.getenv("GRPC_PORT", "50051"))
+    if port:
+        try:
+            server, bound = await grpc_server.start(port, API_KEY)
+            log.warning("gRPC %s aktif di port %d", grpc_server.SERVICE, bound)
+        except Exception:
+            log.exception("gRPC gagal dijalankan; REST /v1/audit tetap hidup")
+    yield
+    if server:
+        await server.stop(5)
 
 
-if __name__ == "__main__":
-    import uvicorn
+app = FastAPI(title="PERIKSA AI Engine", docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
 
-    port = int(os.getenv("PORT", "8000"))
-    uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=True)
+
+def require_key(x_api_key: str = Header(default="")) -> None:
+    if not hmac.compare_digest(x_api_key.encode(), API_KEY.encode()):
+        raise HTTPException(status_code=401, detail="api key tidak valid")
+
+
+@app.get("/healthz")
+def healthz() -> dict:
+    return {"status": "ok", "providers": [f"{n}:{m}" for n, m in chain()]}
+
+
+@app.post("/v1/audit", response_model=AuditResponse, dependencies=[Depends(require_key)])
+async def audit(req: AuditRequest) -> AuditResponse:
+    try:
+        return await run_audit(req)
+    except LlmUnavailable:
+        # Gagal tertutup: pesan ini diteruskan ke pengguna, tidak pernah menganggap kontrak lolos.
+        raise HTTPException(status_code=503, detail=BUSY_MESSAGE)
