@@ -216,7 +216,7 @@
   --font-hand: 'Caveat', cursive;
   --font-code: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 
-  --ease-periksa: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-periksa: cubic-bezier(0.87, 0, 0.13, 1);
 }
 
 /* useReveal adds .is-in when an element scrolls into view. */
