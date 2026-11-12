@@ -1,21 +1,38 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
+import type React from "react";
+import Footer from "@/components/organisms/Footer";
+import SiteLayout from "@/components/organisms/SiteLayout";
+import {
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_THEME_COLOR,
+  SITE_TITLE,
+} from "@/data/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PERIKSA — Platform Elektronik Rekam Integritas Kontrak Sistem Akuntabel",
-  description:
-    "Platform kontrak digital cerdas dan akuntabel untuk penyusunan, audit kepatuhan AI, penandatanganan elektronik, dan pengawasan publik.",
+  title: { default: SITE_TITLE, template: `%s | ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: SITE_THEME_COLOR,
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="id">
-      <body className="antialiased bg-slate-50 text-slate-900 min-h-screen">
-        {children}
+      <body>
+        <Suspense>
+          <SiteLayout footer={<Footer />}>{children}</SiteLayout>
+        </Suspense>
       </body>
     </html>
   );
