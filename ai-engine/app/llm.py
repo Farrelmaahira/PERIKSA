@@ -104,7 +104,7 @@ async def complete(system: str, user: str, parse: Callable[[str], T], deadline: 
         try:
             content, used = await call_provider(name, model, system, user, timeout)
             return parse(content), used
-        except (httpx.HTTPError, TimeoutError, KeyError, IndexError, ValueError, ValidationError) as e:
+        except (httpx.HTTPError, TimeoutError, asyncio.TimeoutError, KeyError, IndexError, ValueError, ValidationError) as e:
             # Hanya nama model dan kode HTTP / jenis galat; isi kontrak tidak pernah dicatat.
             reason = e.response.status_code if isinstance(e, httpx.HTTPStatusError) else type(e).__name__
             log.warning("%s:%s gagal: %s", name, model, reason)
