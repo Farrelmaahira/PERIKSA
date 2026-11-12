@@ -1,0 +1,225 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Jost:wght@300..600&display=swap');
+@import 'tailwindcss';
+
+@layer base {
+  /* Fluid root size like the reference: every rem scales with the viewport. */
+  html {
+    font-size: 2.6667vw;
+    scroll-behavior: smooth;
+  }
+
+  @media (min-width: 768px) {
+    html {
+      font-size: 1.302vw;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    html {
+      /* Scale with the viewport, but stop growing on very wide monitors. */
+      font-size: clamp(7.4px, 0.694vw, 10.5px);
+    }
+  }
+
+  body {
+    background: var(--color-white);
+    color: var(--color-ink);
+    font-family: 'Jost', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 350;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* A modal dialog freezes the page behind it */
+  body:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  ::selection {
+    background: var(--color-blue);
+    color: var(--color-white);
+  }
+}
+
+/* Keyframes used through arbitrary utilities such as [animation:pop_0.4s_ease-out] */
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(3rem);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(1.2rem);
+  }
+}
+
+@keyframes sign {
+  from {
+    stroke-dashoffset: 320;
+  }
+}
+
+@keyframes stamp {
+  from {
+    opacity: 0;
+    transform: scale(1.6) rotate(-12deg);
+  }
+}
+
+@keyframes d-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes d-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.6rem) scale(0.97);
+  }
+}
+
+/* Reveal on scroll */
+[data-reveal] {
+  opacity: 0; /* useReveal animates it in */
+}
+
+/* Text that useTextReveal splits stays hidden until it is ready */
+[data-split] {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+  }
+
+  [data-split] {
+    visibility: visible;
+  }
+}
+
+/* `!important` inside a layer beats `!important` outside one, and earlier layers beat later ones: keep this in base so no utility can keep a transition running. */
+@layer base {
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* shadcn/ui tokens mapped to the PERIKSA palette. No base rules here, so existing elements keep their design. */
+:root {
+  --radius: 0.625rem;
+  --background: var(--color-white);
+  --foreground: var(--color-ink);
+  --card: var(--color-white);
+  --card-foreground: var(--color-ink);
+  --popover: var(--color-white);
+  --popover-foreground: var(--color-ink);
+  --primary: var(--color-blue);
+  --primary-foreground: var(--color-white);
+  --secondary: var(--color-soft);
+  --secondary-foreground: var(--color-ink);
+  --muted: var(--color-soft);
+  --muted-foreground: #5c5c66;
+  --accent: var(--color-soft);
+  --accent-foreground: var(--color-ink);
+  --destructive: #d3341f;
+  --border: #dcdcd8;
+  --input: #dcdcd8;
+  --ring: var(--color-blue);
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+/* ---------- Design tokens for Tailwind utilities (refactor foundation) ----------
+   Static so every variable is always emitted. The old :root variables above and in styles/*.css stay until the last CSS file is gone. */
+@theme static {
+  /* Every design size is a multiple of 0.1rem, and rem follows the fluid root font size. So p-14 is 1.4rem. */
+  --spacing: 0.1rem;
+
+  /* Tailwind's default breakpoints are in rem, which here would be 10px-based. The design switches at fixed pixel widths. */
+  --breakpoint-*: initial;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1440px;
+  --breakpoint-feat: 992px;
+
+  --color-blue: #0a3cce;
+  --color-deep: #02268e;
+  --color-ink: #0f0f17;
+  --color-soft: #ededeb;
+  --color-white: #ffffff;
+  --color-red: #d3341f;
+  --color-green: #1b7a3e;
+  --color-gray: #5c5c66;
+  --color-line: #dcdcd8;
+  --color-dim: #6b6b73;
+  --color-side-dim: #c3cff5;
+  --color-ink-dim: #a6a6b0;
+
+  /* Named apart from --font-sans / --font-mono so Tailwind's defaults for html, code and pre are untouched. */
+  --font-body: 'Jost', sans-serif;
+  --font-hand: 'Caveat', cursive;
+  --font-code: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  --ease-periksa: cubic-bezier(0.87, 0, 0.13, 1);
+}
+
+/* useReveal adds .is-in when an element scrolls into view. */
+@custom-variant revealed (&.is-in);
+/* Hover effects only for real pointers, like the original @media (hover: hover) and (pointer: fine). */
+@custom-variant fine-hover (@media (hover: hover) and (pointer: fine));

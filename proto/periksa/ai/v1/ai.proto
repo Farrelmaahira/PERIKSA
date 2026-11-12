@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package periksa.ai.v1;
+
+option go_package = "periksa-backend/gen/periksa/ai/v1;aiv1";
+
+// Health memakai grpc.health.v1.Health standar (service name "periksa.ai.v1.AiEngine").
+service AiEngine {
+  // Menyusun pasal dari jawaban wizard. Hasilnya draf, bukan versi final.
+  rpc DraftContract(DraftContractRequest) returns (DraftContractResponse);
+  // Mengaudit kelengkapan pasal (berlaku untuk versi AI maupun manual).
+  rpc AuditContract(AuditContractRequest) returns (AuditContractResponse);
+  // Menyaring data pribadi sebelum publikasi.
+  rpc RedactText(RedactTextRequest) returns (RedactTextResponse);
+}
+
+enum ContractType {
+  CONTRACT_TYPE_UNSPECIFIED = 0;
+  PENGADAAN = 1;
+  HIBAH = 2;
+  KERJA_SAMA_BUMDES = 3;
+  SEWA_ASET = 4;
+  UMKM = 5;
+}
+
+enum Severity {
+  SEVERITY_UNSPECIFIED = 0;
+  KRITIS = 1;
+  SARAN = 2;
+}
+
+message LegalReference {
+  int64 id = 1;            // legal_references.id
+  string peraturan = 2;
+  string nomor_pasal = 3;
+  string isi = 4;
+}
+
+message Clause {
+  string kode_pasal = 1;
+  string judul = 2;
+  string isi = 3;
+  int32 urutan = 4;
+  int64 legal_reference_id = 5;  // 0 = tanpa dasar hukum
+}
+
+message DraftContractRequest {
+  ContractType jenis = 1;
+  map<string, string> jawaban = 2;          // jawaban_form wizard
+  repeated Clause clause_library = 3;       // template + pasal wajib dari clause_library
+}
+
+message DraftContractResponse {
+  repeated Clause clauses = 1;
+  string reasoning = 2;
+}
+
+message AuditFinding {
+  string kode_pasal = 1;
+  Severity severity = 2;
+  string isu = 3;
+  string rekomendasi = 4;
+  int64 legal_reference_id = 5;
+}
+
+message AuditContractRequest {
+  ContractType jenis = 1;
+  repeated Clause clauses = 2;
+  repeated Clause mandatory_clauses = 3;
+}
+
+message AuditContractResponse {
+  int32 skor_kepatuhan = 1;     // 0 - 100
+  repeated AuditFinding temuan = 2;
+  string ringkasan = 3;
+}
+
+message RedactSpan {
+  int32 start = 1;
+  int32 end = 2;
+  string category = 3;          // NIK, NAMA, REKENING, TELEPON, EMAIL
+}
+
+message RedactTextRequest {
+  string text = 1;
+}
+
+message RedactTextResponse {
+  string redacted_text = 1;
+  repeated RedactSpan spans = 2;
+}

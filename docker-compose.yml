@@ -1,0 +1,82 @@
+name: periksa
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: periksa
+    ports:
+      - "5432:5432"
+    volumes:
+      - periksa_postgres_data:/var/lib/postgresql/data
+      - ./backend/scripts/compat_datetime.sql:/docker-entrypoint-initdb.d/00_compat_datetime.sql
+      - ./backend/scripts/PERIKSA.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./backend/scripts/seed_villages.sql:/docker-entrypoint-initdb.d/02_seed_villages.sql
+      - ./backend/scripts/seed_demo.sql:/docker-entrypoint-initdb.d/03_seed_demo.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d periksa"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "128mb", "--maxmemory-policy", "allkeys-lru"]
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    image: periksa-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - PERIKSA_SECRET=periksa-development-secret-key-min16chars
+      - APP_ENV=development
+      - PORT=8080
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/periksa?sslmode=disable
+      - REDIS_URL=redis://redis:6379/0
+      - AI_ENGINE_GRPC_ADDR=ai-engine:50051
+      - STORAGE_DIR=/data/files
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  ai-engine:
+    build: ./ai-engine
+    image: periksa-ai-engine
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+      - "50051:50051"
+    environment:
+      - APP_ENV=development
+      - PORT=8000
+      - GRPC_PORT=50051
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+
+  frontend:
+    build: ./frontend
+    image: periksa-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
+    depends_on:
+      - backend
+
+volumes:
+  periksa_postgres_data:

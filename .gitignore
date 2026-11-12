@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.venv/
+env/
+venv/
+ENV/
+
+# Production / Builds
+.next/
+out/
+build/
+dist/
+bin/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs & Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Go cache
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Graphify & documentation tools
+graphify-out/
+.DS_Store
+Thumbs.db
+docs/superpowers/
