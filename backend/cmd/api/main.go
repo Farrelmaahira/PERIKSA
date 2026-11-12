@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -25,10 +26,36 @@ func env(key, fallback string) string {
 	return fallback
 }
 
+func loadDotEnv(paths ...string) {
+	for _, p := range paths {
+		data, err := os.ReadFile(p)
+		if err != nil {
+			continue
+		}
+		for _, line := range strings.Split(string(data), "\n") {
+			line = strings.TrimSpace(line)
+			if line == "" || strings.HasPrefix(line, "#") {
+				continue
+			}
+			parts := strings.SplitN(line, "=", 2)
+			if len(parts) == 2 {
+				k := strings.TrimSpace(parts[0])
+				v := strings.TrimSpace(parts[1])
+				v = strings.Trim(v, `"'`)
+				if os.Getenv(k) == "" {
+					_ = os.Setenv(k, v)
+				}
+			}
+		}
+	}
+}
+
 const minSecretLen = 16
 
 func main() {
-	devEnv := map[string]bool{"development": true, "local": true, "test": true}[os.Getenv("APP_ENV")]
+	loadDotEnv(".env", "../.env")
+	appEnv := env("APP_ENV", "development")
+	devEnv := map[string]bool{"development": true, "local": true, "test": true}[appEnv]
 	secret := os.Getenv("PERIKSA_SECRET")
 	if secret == "" && devEnv {
 		secret = "periksa-development-secret-key-min16chars" // hanya dev; semua replika dev memakai nilai yang sama
@@ -36,7 +63,7 @@ func main() {
 	// Minimal 16 karena panjang secret Azure yang sudah terpasang belum diketahui; naikkan ke 32 setelah dicek.
 	if len(secret) < minSecretLen {
 		slog.Error("PERIKSA_SECRET wajib diisi (min. 16 karakter) dan sama di semua replika; default hanya untuk APP_ENV=development/local/test",
-			"app_env", os.Getenv("APP_ENV"), "len", len(secret))
+			"app_env", appEnv, "len", len(secret))
 		os.Exit(1)
 	}
 	port := env("PORT", "8080")

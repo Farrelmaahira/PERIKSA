@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -19,7 +20,32 @@ func getEnv(key, fallback string) string {
 	return fallback
 }
 
+func loadDotEnv(paths ...string) {
+	for _, p := range paths {
+		data, err := os.ReadFile(p)
+		if err != nil {
+			continue
+		}
+		for _, line := range strings.Split(string(data), "\n") {
+			line = strings.TrimSpace(line)
+			if line == "" || strings.HasPrefix(line, "#") {
+				continue
+			}
+			parts := strings.SplitN(line, "=", 2)
+			if len(parts) == 2 {
+				k := strings.TrimSpace(parts[0])
+				v := strings.TrimSpace(parts[1])
+				v = strings.Trim(v, `"'`)
+				if os.Getenv(k) == "" {
+					_ = os.Setenv(k, v)
+				}
+			}
+		}
+	}
+}
+
 func main() {
+	loadDotEnv(".env", "../.env")
 	reset := flag.Bool("reset", false, "Reset public schema before applying SQL")
 	filePath := flag.String("file", "", "Path to PERIKSA.sql file (optional, auto-detected)")
 	dbURL := flag.String("db", "", "PostgreSQL connection string (default from DATABASE_URL or localhost)")
