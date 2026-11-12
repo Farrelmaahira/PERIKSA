@@ -1,4 +1,4 @@
-export default function HomePage() {
+﻿export default function HomePage() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-8 bg-gradient-to-b from-blue-50 to-white text-slate-800">
       <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl border border-blue-100 p-8 text-center space-y-6">
