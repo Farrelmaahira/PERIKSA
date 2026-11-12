@@ -5,5 +5,7 @@
 *.dylib
 bin/
 dist/
+tmp/
+build-errors.log
 .env
 .env.local
