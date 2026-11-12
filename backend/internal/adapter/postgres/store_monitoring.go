@@ -133,14 +133,20 @@ func notify(ctx context.Context, tx pgx.Tx, userID int64, jenis, pesan, tautan s
 }
 
 // notifyVendor memberi tahu pihak kedua (bila punya akun dan bukan pelaku aksi) tentang perubahan pada kontrak.
+// Kontrak yang belum dikirim (draf/diaudit) atau sudah dibatalkan tidak terlihat penyedia (lihat scopeCond),
+// jadi tidak boleh ada notifikasi yang membocorkan judulnya.
 func notifyVendor(ctx context.Context, tx pgx.Tx, contractID, actorID int64, jenis, apa string) error {
 	vendor, err := vendorUserID(ctx, tx, contractID)
 	if err != nil || vendor == 0 || vendor == actorID {
 		return err
 	}
-	var judul string
-	if err := tx.QueryRow(ctx, `SELECT judul FROM contracts WHERE id = $1`, contractID).Scan(&judul); err != nil {
+	var judul, status string
+	if err := tx.QueryRow(ctx, `SELECT judul, status::text FROM contracts WHERE id = $1`, contractID).Scan(&judul, &status); err != nil {
 		return err
+	}
+	switch domain.ContractStatus(status) {
+	case domain.StatusDraft, domain.StatusAudited, domain.StatusCancelled:
+		return nil
 	}
 	return notify(ctx, tx, vendor, jenis, fmt.Sprintf("Kontrak \"%s\" %s.", judul, apa), contractLink(contractID))
 }
@@ -881,7 +887,7 @@ func (s *Store) CancelContract(ctx context.Context, p usecase.CancelContractPara
 	}
 	pesan := fmt.Sprintf("Kontrak \"%s\" dibatalkan oleh desa.", lc.Judul)
 	for _, uid := range uniqueIDs(vendor, lc.CreatorID) {
-		if uid == p.Scope.UserID {
+		if uid == p.Scope.UserID || (uid == vendor && lc.Status != domain.StatusInReview) {
 			continue
 		}
 		if err := notify(ctx, tx, uid, "kontrak_dibatalkan", pesan, contractLink(p.ContractID)); err != nil {
