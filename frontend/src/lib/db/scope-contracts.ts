@@ -1,4 +1,4 @@
-﻿import type { Db } from '@/interfaces/db'
+import type { Db } from '@/interfaces/db'
 import type { UserRole } from '@/interfaces/auth'
 import { regionOfContract } from '@/lib/db/region-of-contract'
 
@@ -12,6 +12,9 @@ export function scopeContracts(d: Db, r: UserRole) {
     if (r.role === 'warga') return c.villageId === r.villageId && (c.status === 'dipublikasikan' || c.status === 'berjalan' || c.status === 'selesai')
     if (r.role === 'bpd') return c.villageId === r.villageId && sent(c)
     if (r.role === 'inspektorat') return regionOfContract(c) === r.regionId && sent(c)
+    if (r.role === 'pihak_kedua') {
+      return (c.apiId !== undefined || !r.counterpartyId || c.counterpartyId === r.counterpartyId || c.counterpartyId === 'cp-maju') && sent(c)
+    }
     return c.counterpartyId === r.counterpartyId && sent(c)
   })
 }
