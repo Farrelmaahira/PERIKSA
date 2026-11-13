@@ -116,7 +116,26 @@ jobs:
               --registry-password "$registry_password" \
               --environment-variables "DATABASE_URL=$database_url" \
               --output none
-            az container wait --name periksa-migrate --resource-group "$AZURE_RESOURCE_GROUP" --custom "instanceView.state == 'Succeeded'"
+            for attempt in $(seq 1 36); do
+              state=$(az container show \
+                --name periksa-migrate \
+                --resource-group "$AZURE_RESOURCE_GROUP" \
+                --query instanceView.state \
+                --output tsv)
+              case "$state" in
+                Succeeded) break ;;
+                Failed|Terminated)
+                  az container logs --name periksa-migrate --resource-group "$AZURE_RESOURCE_GROUP"
+                  exit 1
+                  ;;
+              esac
+              sleep 10
+            done
+            if [ "$state" != "Succeeded" ]; then
+              az container logs --name periksa-migrate --resource-group "$AZURE_RESOURCE_GROUP"
+              echo "Migration timed out with state $state"
+              exit 1
+            fi
             az container delete --name periksa-migrate --resource-group "$AZURE_RESOURCE_GROUP" --yes --output none
 
       - name: Deploy backend and AI engine
