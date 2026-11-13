@@ -1,11 +1,14 @@
 targetScope = 'resourceGroup'
 
 param location string = resourceGroup().location
-param environmentName string
 param acrName string
 param postgresServerName string
 param redisName string
 param storageAccountName string
+param appServicePlanName string = 'periksa-plan'
+param backendAppName string = 'periksa-backend'
+param aiContainerName string = 'periksa-ai'
+param aiDnsLabel string
 @secure()
 param postgresAdminPassword string
 @secure()
@@ -20,35 +23,10 @@ param webOrigin string = 'http://localhost:3000'
 param postgresAdminUser string = 'periksaadmin'
 param postgresDatabaseName string = 'periksa'
 
-var backendAppName = 'periksa-backend'
-var aiAppName = 'periksa-ai'
-var storageShareName = 'files'
 var placeholderImage = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
-
-resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2022-10-01' = {
-  name: '${environmentName}-logs'
-  location: location
-  properties: {
-    retentionInDays: 30
-    workspaceCapping: {
-      dailyQuotaGb: 1
-    }
-  }
-}
-
-resource environment 'Microsoft.App/managedEnvironments@2023-05-01' = {
-  name: environmentName
-  location: location
-  properties: {
-    appLogsConfiguration: {
-      destination: 'log-analytics'
-      logAnalyticsConfiguration: {
-        customerId: logAnalytics.properties.customerId
-        sharedKey: logAnalytics.listKeys().primarySharedKey
-      }
-    }
-  }
-}
+var postgresUrl = 'postgresql://${postgresAdminUser}:${postgresAdminPassword}@${postgresServerName}.postgres.database.azure.com:5432/${postgresDatabaseName}?sslmode=require'
+var redisUrl = 'rediss://:${redis.listKeys().primaryKey}@${redis.name}.redis.cache.windows.net:6380/0'
+var aiFqdn = '${aiDnsLabel}.${location}.azurecontainer.io'
 
 resource registry 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
   name: acrName
@@ -128,74 +106,60 @@ resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   }
 }
 
-resource fileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2023-05-01' = {
-  name: '${storage.name}/default/${storageShareName}'
+resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
+  name: appServicePlanName
+  location: location
+  kind: 'linux'
+  sku: {
+    name: 'B1'
+    tier: 'Basic'
+  }
   properties: {
-    accessTier: 'TransactionOptimized'
-    shareQuota: 100
+    reserved: true
   }
 }
 
-resource environmentStorage 'Microsoft.App/managedEnvironments/storages@2023-05-01' = {
-  parent: environment
-  name: 'files'
-  properties: {
-    azureFile: {
-      accountName: storage.name
-      accountKey: storage.listKeys().keys[0].value
-      shareName: storageShareName
-      accessMode: 'ReadWrite'
-    }
-  }
-}
-
-var postgresUrl = 'postgresql://${postgresAdminUser}:${postgresAdminPassword}@${postgresServerName}.postgres.database.azure.com:5432/${postgresDatabaseName}?sslmode=require'
-var redisUrl = 'rediss://:${redis.listKeys().primaryKey}@${redis.name}.redis.cache.windows.net:6380/0'
-
-resource aiApp 'Microsoft.App/containerApps@2023-05-01' = {
-  name: aiAppName
+resource aiContainer 'Microsoft.ContainerInstance/containerGroups@2023-05-01' = {
+  name: aiContainerName
   location: location
   properties: {
-    managedEnvironmentId: environment.id
-    configuration: {
-      ingress: {
-        external: false
-        transport: 'tcp'
-        targetPort: 50051
-        exposedPort: 50051
-      }
-      registries: [
+    osType: 'Linux'
+    restartPolicy: 'Always'
+    ipAddress: {
+      type: 'Public'
+      dnsNameLabel: aiDnsLabel
+      ports: [
         {
-          server: registry.properties.loginServer
-          username: registry.listCredentials().username
-          passwordSecretRef: 'registry-password'
-        }
-      ]
-      secrets: [
-        {
-          name: 'registry-password'
-          value: registry.listCredentials().passwords[0].value
+          port: 50051
+          protocol: 'TCP'
         }
         {
-          name: 'ai-api-key'
-          value: aiApiKey
-        }
-        {
-          name: 'gemini-api-key'
-          value: geminiApiKey
-        }
-        {
-          name: 'groq-api-key'
-          value: groqApiKey
+          port: 8000
+          protocol: 'TCP'
         }
       ]
     }
-    template: {
-      containers: [
-        {
-          name: 'ai-engine'
+    imageRegistryCredentials: [
+      {
+        server: registry.properties.loginServer
+        username: registry.listCredentials().username
+        password: registry.listCredentials().passwords[0].value
+      }
+    ]
+    containers: [
+      {
+        name: 'ai-engine'
+        properties: {
           image: placeholderImage
-          env: [
+          ports: [
+            {
+              port: 50051
+            }
+            {
+              port: 8000
+            }
+          ]
+          environmentVariables: [
             {
               name: 'APP_ENV'
               value: 'production'
@@ -206,169 +170,101 @@ resource aiApp 'Microsoft.App/containerApps@2023-05-01' = {
             }
             {
               name: 'AI_API_KEY'
-              secretRef: 'ai-api-key'
+              secureValue: aiApiKey
             }
             {
               name: 'GEMINI_API_KEY'
-              secretRef: 'gemini-api-key'
+              secureValue: geminiApiKey
             }
             {
               name: 'GROQ_API_KEY'
-              secretRef: 'groq-api-key'
+              secureValue: groqApiKey
             }
           ]
           resources: {
-            cpu: json('0.5')
-            memory: '1Gi'
+            requests: {
+              cpu: json('0.5')
+              memoryInGB: json('1.0')
+            }
           }
         }
-      ]
-      scale: {
-        minReplicas: 1
-        maxReplicas: 2
       }
-    }
+    ]
   }
 }
 
-resource backendApp 'Microsoft.App/containerApps@2023-05-01' = {
+resource backendApp 'Microsoft.Web/sites@2022-03-01' = {
   name: backendAppName
   location: location
+  kind: 'app,linux,container'
   properties: {
-    managedEnvironmentId: environment.id
-    configuration: {
-      ingress: {
-        external: true
-        transport: 'http'
-        targetPort: 8080
-        allowInsecure: false
-      }
-      secrets: [
+    serverFarmId: appServicePlan.id
+    httpsOnly: true
+    siteConfig: {
+      linuxFxVersion: 'DOCKER|${registry.properties.loginServer}/periksa-backend:bootstrap'
+      alwaysOn: true
+      appSettings: [
         {
-          name: 'registry-password'
-          value: registry.listCredentials().passwords[0].value
+          name: 'WEBSITES_ENABLE_APP_SERVICE_STORAGE'
+          value: 'true'
         }
         {
-          name: 'postgres-url'
+          name: 'APP_ENV'
+          value: 'production'
+        }
+        {
+          name: 'PORT'
+          value: '8080'
+        }
+        {
+          name: 'DATABASE_URL'
           value: postgresUrl
         }
         {
-          name: 'redis-url'
+          name: 'REDIS_URL'
           value: redisUrl
         }
         {
-          name: 'periksa-secret'
+          name: 'PERIKSA_SECRET'
           value: periksaSecret
         }
         {
-          name: 'ai-api-key'
+          name: 'AI_API_KEY'
           value: aiApiKey
         }
-      ]
-      registries: [
         {
-          server: registry.properties.loginServer
-          username: registry.listCredentials().username
-          passwordSecretRef: 'registry-password'
+          name: 'AI_ENGINE_GRPC_ADDR'
+          value: '${aiFqdn}:50051'
+        }
+        {
+          name: 'AI_ENGINE_GRPC_TLS'
+          value: 'false'
+        }
+        {
+          name: 'STORAGE_DIR'
+          value: '/home/data/files'
+        }
+        {
+          name: 'WEB_ORIGIN'
+          value: webOrigin
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_URL'
+          value: 'https://${registry.properties.loginServer}'
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_USERNAME'
+          value: registry.listCredentials().username
+        }
+        {
+          name: 'DOCKER_REGISTRY_SERVER_PASSWORD'
+          value: registry.listCredentials().passwords[0].value
         }
       ]
-    }
-    template: {
-      containers: [
-        {
-          name: 'backend'
-          image: placeholderImage
-          env: [
-            {
-              name: 'APP_ENV'
-              value: 'production'
-            }
-            {
-              name: 'PORT'
-              value: '8080'
-            }
-            {
-              name: 'DATABASE_URL'
-              secretRef: 'postgres-url'
-            }
-            {
-              name: 'REDIS_URL'
-              secretRef: 'redis-url'
-            }
-            {
-              name: 'PERIKSA_SECRET'
-              secretRef: 'periksa-secret'
-            }
-            {
-              name: 'AI_API_KEY'
-              secretRef: 'ai-api-key'
-            }
-            {
-              name: 'AI_ENGINE_GRPC_ADDR'
-              value: 'periksa-ai:50051'
-            }
-            {
-              name: 'AI_ENGINE_GRPC_TLS'
-              value: 'false'
-            }
-            {
-              name: 'STORAGE_DIR'
-              value: '/data/files'
-            }
-            {
-              name: 'WEB_ORIGIN'
-              value: webOrigin
-            }
-          ]
-          volumeMounts: [
-            {
-              volumeName: 'files'
-              mountPath: '/data/files'
-            }
-          ]
-          probes: [
-            {
-              type: 'Liveness'
-              httpGet: {
-                path: '/healthz'
-                port: 8080
-              }
-              initialDelaySeconds: 10
-              periodSeconds: 30
-            }
-            {
-              type: 'Readiness'
-              httpGet: {
-                path: '/readyz'
-                port: 8080
-              }
-              initialDelaySeconds: 10
-              periodSeconds: 15
-            }
-          ]
-          resources: {
-            cpu: json('0.5')
-            memory: '1Gi'
-          }
-        }
-      ]
-      volumes: [
-        {
-          name: 'files'
-          storageType: 'AzureFile'
-          storageName: 'files'
-        }
-      ]
-      scale: {
-        minReplicas: 1
-        maxReplicas: 3
-      }
     }
   }
 }
 
 output registryLoginServer string = registry.properties.loginServer
-output backendAppName string = backendApp.name
-output backendFqdn string = backendApp.properties.configuration.ingress.fqdn
-output postgresHost string = postgres.properties.fullyQualifiedDomainName
-output redisHost string = redis.properties.hostName
+output backendHostName string = backendApp.properties.defaultHostName
+output aiFqdn string = aiFqdn

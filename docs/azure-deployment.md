@@ -1,6 +1,6 @@
 # Azure deployment
 
-Backend dan AI engine dideploy oleh `.github/workflows/deploy-azure.yml` ke Azure Container Apps. Backend memiliki ingress HTTPS publik; AI engine memakai ingress TCP internal pada port gRPC `50051`.
+Backend dan AI engine dideploy oleh `.github/workflows/deploy-azure.yml`. Backend memakai Azure App Service Linux dengan HTTPS publik; AI engine memakai Azure Container Instances dengan port gRPC `50051`.
 
 ## GitHub configuration
 
@@ -22,13 +22,12 @@ Set repository variables berikut. Semua nama resource harus global-unique dan ha
 - `AZURE_STORAGE`
 - `AZURE_LOCATION` (opsional, default `southeastasia`)
 - `AZURE_RESOURCE_GROUP` (opsional, default `periksa-prod`)
-- `AZURE_ENVIRONMENT` (opsional, default `periksa-prod-env`)
 - `WEB_ORIGIN` (opsional; isi URL FE production)
 
-Push ke `main` akan membuat resource group, PostgreSQL, Redis, storage file share, Container Apps environment, ACR, lalu build dan deploy image backend serta AI engine. FE cukup memakai:
+Push ke `main` akan membuat resource group, PostgreSQL, Redis, storage account, App Service Plan, ACR, lalu build dan deploy image backend serta AI engine. FE cukup memakai:
 
 ```text
 NEXT_PUBLIC_API_URL=https://<backend-fqdn>/api/v1
 ```
 
-Workflow membangun image migrasi terpisah dari `backend/cmd/migrate`, menjalankannya sebagai Container Apps Job, dan tidak pernah menjalankan reset schema.
+Workflow membangun image migrasi terpisah dari `backend/cmd/migrate`, menjalankannya sebagai Container Instance sekali jalan, dan tidak pernah menjalankan reset schema.
