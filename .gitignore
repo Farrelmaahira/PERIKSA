@@ -45,6 +45,7 @@ htmlcov/
 
 # Graphify & documentation tools
 graphify-out/
+docs/superpowers/
 .DS_Store
 Thumbs.db
 docs/superpowers/

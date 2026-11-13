@@ -1,4 +1,4 @@
-# PERIKSA (Platform Elektronik Rekam Integritas Kontrak Sistem Akuntabel)
+﻿# PERIKSA (Platform Elektronik Rekam Integritas Kontrak Sistem Akuntabel)
 
 **PERIKSA** adalah platform kontrak digital cerdas dan akuntabel yang dirancang untuk membantu pemerintah desa, UMKM, dan penyedia jasa menyusun, mengaudit, menandatangani, serta mengawasi perjanjian kontrak kerja sama secara transparan, sah menurut hukum, dan anti-pemalsuan.
 
@@ -24,7 +24,7 @@ periksa/
 ├── backend/     # API Gateway & Core Business Logic (Golang 1.23, PostgreSQL, Redis, gRPC Client)
 ├── ai-engine/   # Layanan Cerdas LLM & NLP (Python 3.10+, FastAPI, gRPC Server, Google Gemini)
 ├── proto/       # Definisi Kontrak Komunikasi Antar-Layanan (Protocol Buffers / gRPC)
-└── docs/        # Dokumentasi arsitektur, PRD, Postman collection, dan Panduan Migrasi Tim
+└── docs/        # Dokumentasi arsitektur, PRD, dan Postman collection
 ```
 
 ---
