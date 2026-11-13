@@ -1,4 +1,5 @@
-﻿import Btn from '@/components/atoms/Btn'
+import Btn from '@/components/atoms/Btn'
+import DatePicker from '@/components/atoms/DatePicker'
 import FormAlert from '@/components/atoms/FormAlert'
 import FormField from '@/components/molecules/FormField'
 import type { useRegionRules } from '@/hooks/use-region-rules'
@@ -23,7 +24,7 @@ export default function RegionRuleForm({ rules: r }: Props) {
         <input value={r.form.dasar} onChange={(e) => r.set({ dasar: e.target.value })} placeholder="Contoh: Perbup Nomor 12 Tahun 2026" />
       </FormField>
       <FormField label="Berlaku sejak">
-        <input type="date" value={r.form.sejak} onChange={(e) => r.set({ sejak: e.target.value })} />
+        <DatePicker value={r.form.sejak} onChange={(val: string) => r.set({ sejak: val })} />
       </FormField>
       {r.error && <div className="md:col-span-2"><FormAlert>{r.error}</FormAlert></div>}
       <div>
