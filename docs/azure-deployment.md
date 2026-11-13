@@ -24,7 +24,7 @@ Set repository variables berikut. Semua nama resource harus global-unique dan ha
 - `AZURE_RESOURCE_GROUP` (opsional, default `periksa-prod`)
 - `WEB_ORIGIN` (opsional; isi URL FE production)
 
-Push ke `main` akan membuat resource group, PostgreSQL, Redis, storage account, App Service Plan, ACR, lalu build dan deploy image backend serta AI engine. FE cukup memakai:
+Push ke `main` akan membuat resource group, PostgreSQL, storage account, App Service Plan, dan ACR, lalu build dan deploy image backend serta AI engine. Redis sengaja tidak diprovision karena layanan Redis lama sudah retired pada subscription; backend memakai cache no-op dan rate limiter in-memory. FE cukup memakai:
 
 ```text
 NEXT_PUBLIC_API_URL=https://<backend-fqdn>/api/v1

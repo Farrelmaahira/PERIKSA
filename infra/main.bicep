@@ -3,7 +3,6 @@ targetScope = 'resourceGroup'
 param location string = resourceGroup().location
 param acrName string
 param postgresServerName string
-param redisName string
 param storageAccountName string
 param appServicePlanName string = 'periksa-plan'
 param backendAppName string = 'periksa-backend'
@@ -25,7 +24,6 @@ param postgresDatabaseName string = 'periksa'
 
 var placeholderImage = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
 var postgresUrl = 'postgresql://${postgresAdminUser}:${postgresAdminPassword}@${postgresServerName}.postgres.database.azure.com:5432/${postgresDatabaseName}?sslmode=require'
-var redisUrl = 'rediss://:${redis.listKeys().primaryKey}@${redis.name}.redis.cache.windows.net:6380/0'
 var aiFqdn = '${aiDnsLabel}.${location}.azurecontainer.io'
 
 resource registry 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
@@ -75,20 +73,6 @@ resource postgresFirewallAzure 'Microsoft.DBforPostgreSQL/flexibleServers/firewa
   properties: {
     startIpAddress: '0.0.0.0'
     endIpAddress: '0.0.0.0'
-  }
-}
-
-resource redis 'Microsoft.Cache/Redis@2023-08-01' = {
-  name: redisName
-  location: location
-  properties: {
-    enableNonSslPort: false
-    minimumTlsVersion: '1.2'
-    sku: {
-      name: 'Basic'
-      family: 'C'
-      capacity: 0
-    }
   }
 }
 
@@ -219,10 +203,6 @@ resource backendApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'DATABASE_URL'
           value: postgresUrl
-        }
-        {
-          name: 'REDIS_URL'
-          value: redisUrl
         }
         {
           name: 'PERIKSA_SECRET'

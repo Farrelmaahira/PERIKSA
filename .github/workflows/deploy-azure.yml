@@ -20,7 +20,6 @@ env:
   AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP || 'periksa-prod' }}
   AZURE_ACR: ${{ vars.AZURE_ACR }}
   AZURE_POSTGRES: ${{ vars.AZURE_POSTGRES }}
-  AZURE_REDIS: ${{ vars.AZURE_REDIS }}
   AZURE_STORAGE: ${{ vars.AZURE_STORAGE }}
   AZURE_APP_PLAN: periksa-plan
   AZURE_BACKEND_APP: periksa-backend
@@ -67,7 +66,6 @@ jobs:
                 location="$AZURE_LOCATION" \
                 acrName="$AZURE_ACR" \
                 postgresServerName="$AZURE_POSTGRES" \
-                redisName="$AZURE_REDIS" \
                 storageAccountName="$AZURE_STORAGE" \
                 appServicePlanName="$AZURE_APP_PLAN" \
                 backendAppName="$AZURE_BACKEND_APP" \
