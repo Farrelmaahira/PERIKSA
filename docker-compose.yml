@@ -81,8 +81,11 @@ services:
       - "3000:3000"
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080/api/v1}
+      - AI_ENGINE_URL=http://ai-engine:8000
+      - AI_API_KEY=${AI_API_KEY:-periksa-ai-secret-key-development}
     depends_on:
       - backend
+      - ai-engine
 
 volumes:
   periksa_postgres_data:
