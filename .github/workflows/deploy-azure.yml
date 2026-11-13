@@ -83,9 +83,16 @@ jobs:
         uses: azure/cli@v2
         with:
           inlineScript: |
-            az acr build --registry "$AZURE_ACR" --image periksa-backend:${{ github.sha }} --file backend/Dockerfile backend
-            az acr build --registry "$AZURE_ACR" --image periksa-migrate:${{ github.sha }} --file backend/Dockerfile.migrate backend
-            az acr build --registry "$AZURE_ACR" --image periksa-ai:${{ github.sha }} --file ai-engine/Dockerfile ai-engine
+            registry_login_server=$(az acr show --name "$AZURE_ACR" --query loginServer -o tsv)
+            registry_username=$(az acr credential show --name "$AZURE_ACR" --query username -o tsv)
+            registry_password=$(az acr credential show --name "$AZURE_ACR" --query passwords[0].value -o tsv)
+            echo "$registry_password" | docker login "$registry_login_server" --username "$registry_username" --password-stdin
+            docker build --tag "$registry_login_server/periksa-backend:${{ github.sha }}" --file backend/Dockerfile backend
+            docker build --tag "$registry_login_server/periksa-migrate:${{ github.sha }}" --file backend/Dockerfile.migrate backend
+            docker build --tag "$registry_login_server/periksa-ai:${{ github.sha }}" --file ai-engine/Dockerfile ai-engine
+            docker push "$registry_login_server/periksa-backend:${{ github.sha }}"
+            docker push "$registry_login_server/periksa-migrate:${{ github.sha }}"
+            docker push "$registry_login_server/periksa-ai:${{ github.sha }}"
 
       - name: Run database migration
         uses: azure/cli@v2
