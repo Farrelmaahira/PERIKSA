@@ -9,6 +9,9 @@ node_modules
 !.yarn/sdks
 !.yarn/versions
 
+# npm is the package manager
+yarn.lock
+
 # testing
 /coverage
 
