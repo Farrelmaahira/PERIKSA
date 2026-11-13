@@ -1,4 +1,4 @@
-﻿import type { ContractAudit } from '@/interfaces/api'
+import type { ContractAudit } from '@/interfaces/api'
 import type { UserRole } from '@/interfaces/auth'
 import type { DContract, Review, Version } from '@/interfaces/db'
 import type { Answers, Audit, Clause, TemplateKey } from '@/interfaces/drafting'
@@ -52,12 +52,12 @@ export function toDContract(l: ContractLifecycleResponse, audit: ContractAudit |
     replies: [],
   }))
   return {
-    code: code || `SKS-2026-${String(k.id).padStart(3, '0')}`,
+    code: code || `PRK-2026-${String(k.id).padStart(3, '0')}`,
     apiId: k.id,
     villageId: k.villageId ? villageById(k.villageId)!.id : (role.villageId ?? ''),
     template,
     title: k.judul,
-    counterpartyId: role.role === 'pihak_kedua' ? (role.counterpartyId ?? '') : String(k.counterpartyId ?? ''),
+    counterpartyId: role.role === 'pihak_kedua' ? (role.counterpartyId ?? 'cp-maju') : String(k.counterpartyId ?? 'cp-maju'),
     status: toContractStatus(k.status),
     createdAt: k.createdAt.slice(0, 10),
     versions,

@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+import { useState } from 'react'
 import { useSimClauses } from '@/hooks/use-sim-clauses'
 import { useSimDrag } from '@/hooks/use-sim-drag'
 import { useSimSeal } from '@/hooks/use-sim-seal'
@@ -15,7 +15,7 @@ export function useSimulator() {
   const [type, setType] = useState<string | null>(null)
   const [typeMsg, setTypeMsg] = useState<string | null>(null)
   const [published, setPublished] = useState<Contract | null>(null)
-  const [code] = useState(() => `SKS-SIM-${Math.floor(1000 + Math.random() * 9000)}`)
+  const [code] = useState(() => `PRK-SIM-${Math.floor(1000 + Math.random() * 9000)}`)
   const draft = useSimClauses(code)
   const sign = useSimSign()
   const seal = useSimSeal(code, draft.placed)
