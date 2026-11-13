@@ -1,5 +1,6 @@
-﻿import type { SealedContract } from "@/interfaces/contract";
+import type { SealedContract } from "@/interfaces/contract";
 import CitizenReports from "./CitizenReports";
+import ContractAiSummary from "@/components/molecules/ContractAiSummary";
 import ContractClauses from "./ContractClauses";
 import ContractFacts from "./ContractFacts";
 import ContractHead from "./ContractHead";
@@ -19,6 +20,7 @@ export default function ContractDetail({ contract: c, onReport }: Props) {
         <div className="contract-main">
           <ContractFacts c={c} />
           <HashCard c={c} />
+          <ContractAiSummary c={c} />
           <ContractClauses c={c} />
         </div>
         <div className="contract-side">

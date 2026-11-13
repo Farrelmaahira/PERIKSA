@@ -3,6 +3,7 @@ import SignBlock from '@/components/molecules/SignBlock'
 import type { Clause } from '@/interfaces/drafting'
 import type { ContractSignatures } from '@/interfaces/db'
 import { fmtDate } from '@/lib/dates/fmt-date'
+import { SITE_TAGLINE } from '@/data/site'
 
 interface Props {
   title: string
@@ -24,7 +25,7 @@ export default function LetterPreview({ title, code, village, head, second, date
     <article className="bg-white border-[0.15rem] border-line border-solid rounded-[1.2rem] text-ink grid gap-20 max-w-780 p-24 md:p-40 w-full" aria-label={`Pratinjau surat ${title}`}>
       <header className="border-b-[0.2rem] border-b-ink border-solid grid gap-2 pb-14 text-center">
         <p className="text-[1.3rem] tracking-[0.08em] uppercase">Pemerintah {village}</p>
-        <small className="text-[1.1rem] text-dim uppercase">PERIKSA · Sistem Audit Kontrak Segel Integritas</small>
+        <small className="text-[1.1rem] text-dim uppercase">PERIKSA · {SITE_TAGLINE}</small>
       </header>
 
       <div className="grid gap-4 text-center">

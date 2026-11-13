@@ -1,4 +1,4 @@
-﻿import BenefitsSection from "@/components/organisms/BenefitsSection";
+import BenefitsSection from "@/components/organisms/BenefitsSection";
 import BriefSection from "@/components/organisms/BriefSection";
 import FeaturesSection from "@/components/organisms/FeaturesSection";
 import HomeEffects from "@/components/molecules/HomeEffects";
@@ -13,7 +13,7 @@ export default function HomeTemplate() {
     <>
       <main>
         <HomeHero />
-        <div className="bg-white overflow-clip relative z-1">
+        <div className="bg-white overflow-clip relative z-1 home-content-sheet">
           <BriefSection />
           <LoreSection />
           <PatternSection />

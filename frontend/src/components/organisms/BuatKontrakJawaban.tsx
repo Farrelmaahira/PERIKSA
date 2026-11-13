@@ -1,4 +1,6 @@
-﻿import StepTitle from '@/components/atoms/StepTitle'
+import StepTitle from '@/components/atoms/StepTitle'
+import Select from '@/components/atoms/Select'
+import DatePicker from '@/components/atoms/DatePicker'
 import FormField from '@/components/molecules/FormField'
 import Hint from '@/components/atoms/Hint'
 import Segmented from '@/components/molecules/Segmented'
@@ -36,7 +38,11 @@ export default function BuatKontrakJawaban({ info, template, answers, valueText,
           </div>
         </FormField>
         <FormField label="Tenggat selesai" error={errors.deadline}>
-          <input type="date" value={answers.deadline} min={daysFromNow(1)} onChange={(e) => onChange({ deadline: e.target.value })} />
+          <DatePicker
+            value={answers.deadline}
+            min={daysFromNow(1)}
+            onChange={(val: string) => onChange({ deadline: val })}
+          />
         </FormField>
         <FormField group label="Cara pembayaran">
           <Segmented options={['Sekaligus', 'Termin'] as const} value={answers.scheme} onChange={(scheme) => onChange({ scheme })} />
@@ -48,11 +54,11 @@ export default function BuatKontrakJawaban({ info, template, answers, valueText,
         )}
         {template === 'pengadaan' && (
           <FormField label="Metode pengadaan">
-            <select value={answers.method} onChange={(e) => onChange({ method: e.target.value })}>
-              {methods.map((m) => (
-                <option key={m}>{m}</option>
-              ))}
-            </select>
+            <Select
+              value={answers.method}
+              options={methods}
+              onChange={(val: string) => onChange({ method: val })}
+            />
             {rule && <Hint as="small">Batas pengadaan langsung di wilayah ini {formatRp(rule.directMax)}.</Hint>}
           </FormField>
         )}

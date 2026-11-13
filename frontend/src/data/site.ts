@@ -1,6 +1,7 @@
 /* Set NEXT_PUBLIC_SITE_URL to the real domain in production: canonical, sitemap and share links are built from it. */
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
 export const SITE_NAME = 'PERIKSA'
+export const SITE_TAGLINE = 'Platform Elektronik Rekam Integritas Kontrak Sistem Akuntabel'
 export const SITE_TITLE = 'PERIKSA — Platform Elektronik Rekam Integritas Kontrak Sistem Akuntabel'
 export const SITE_DESCRIPTION =
   'Platform digital rekam integritas kontrak desa dan UMKM: penyusunan draf, audit kepatuhan berbasis AI, penandatanganan elektronik, segel integritas hash, hingga pengawasan publik.'

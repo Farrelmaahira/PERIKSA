@@ -8,6 +8,7 @@ from fastapi import Depends, FastAPI, Header, HTTPException
 from app import grpc_server
 from app.llm import BUSY_MESSAGE, LlmUnavailable, chain
 from app.rest_audit import AuditRequest, AuditResponse, run_audit
+from app.rest_summarize import SummarizeRequest, SummarizeResponse, summarize_contract
 
 log = logging.getLogger("ai-engine")
 
@@ -51,3 +52,8 @@ async def audit(req: AuditRequest) -> AuditResponse:
     except LlmUnavailable:
         # Gagal tertutup: pesan ini diteruskan ke pengguna, tidak pernah menganggap kontrak lolos.
         raise HTTPException(status_code=503, detail=BUSY_MESSAGE)
+
+
+@app.post("/v1/summarize", response_model=SummarizeResponse, dependencies=[Depends(require_key)])
+async def summarize(req: SummarizeRequest) -> SummarizeResponse:
+    return await summarize_contract(req)
