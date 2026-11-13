@@ -4,6 +4,7 @@ import Underline from '@/components/atoms/Underline'
 import ScrollTopButton from '@/components/molecules/ScrollTopButton'
 import SessionNavLink from '@/components/molecules/SessionNavLink'
 import { navLinks } from '@/data/nav-links'
+import { SITE_TAGLINE } from '@/data/site'
 
 export default function Footer() {
   return (
@@ -35,9 +36,7 @@ export default function Footer() {
             <span>periksa</span>
           </p>
           <p className="text-[1.2rem] opacity-[0.7] uppercase lg:text-[1.4rem] lg:pb-10 lg:text-right">
-            Sistem Audit Kontrak
-            <br />
-            Segel Integritas
+            {SITE_TAGLINE}
           </p>
         </div>
       </div>
