@@ -1,4 +1,5 @@
 ﻿import StepTitle from '@/components/atoms/StepTitle'
+import Select from '@/components/atoms/Select'
 import FormField from '@/components/molecules/FormField'
 import Hint from '@/components/atoms/Hint'
 import Segmented from '@/components/molecules/Segmented'
@@ -48,11 +49,11 @@ export default function BuatKontrakJawaban({ info, template, answers, valueText,
         )}
         {template === 'pengadaan' && (
           <FormField label="Metode pengadaan">
-            <select value={answers.method} onChange={(e) => onChange({ method: e.target.value })}>
-              {methods.map((m) => (
-                <option key={m}>{m}</option>
-              ))}
-            </select>
+            <Select
+              value={answers.method}
+              options={methods}
+              onChange={(val: string) => onChange({ method: val })}
+            />
             {rule && <Hint as="small">Batas pengadaan langsung di wilayah ini {formatRp(rule.directMax)}.</Hint>}
           </FormField>
         )}
