@@ -47,9 +47,12 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/periksa?sslmode=disable
       - REDIS_URL=redis://redis:6379/0
       - AI_ENGINE_GRPC_ADDR=ai-engine:50051
+      - AI_ENGINE_GRPC_TLS=false
       - AI_ENGINE_URL=http://ai-engine:8000
       - AI_API_KEY=${AI_API_KEY:-periksa-ai-secret-key-development}
       - STORAGE_DIR=/data/files
+      - WEB_ORIGIN=${WEB_ORIGIN:-http://localhost:3000}
+      - TRUSTED_PROXIES=${TRUSTED_PROXIES:-}
     depends_on:
       postgres:
         condition: service_healthy
@@ -70,18 +73,22 @@ services:
       - AI_API_KEY=${AI_API_KEY:-periksa-ai-secret-key-development}
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
       - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - AI_PROVIDERS=${AI_PROVIDERS:-gemini:gemini-3-flash-preview,groq:qwen/qwen3.8-27b,gemini:gemini-3.5-flash}
+      - AI_PROVIDER_TIMEOUT=${AI_PROVIDER_TIMEOUT:-6}
 
   frontend:
     build:
       context: ./frontend
       args:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080/api/v1}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
     image: periksa-frontend
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080/api/v1}
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
     depends_on:
       - backend
 

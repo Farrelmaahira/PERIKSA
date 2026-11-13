@@ -149,8 +149,20 @@ resource aiContainer 'Microsoft.ContainerInstance/containerGroups@2023-05-01' = 
               value: 'production'
             }
             {
+              name: 'PORT'
+              value: '8000'
+            }
+            {
               name: 'GRPC_PORT'
               value: '50051'
+            }
+            {
+              name: 'AI_PROVIDERS'
+              value: 'gemini:gemini-3-flash-preview,gemini:gemini-3.5-flash'
+            }
+            {
+              name: 'AI_PROVIDER_TIMEOUT'
+              value: '6'
             }
             {
               name: 'AI_API_KEY'
@@ -199,6 +211,10 @@ resource backendApp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'PORT'
           value: '8080'
+        }
+        {
+          name: 'TRUSTED_PROXIES'
+          value: ''
         }
         {
           name: 'DATABASE_URL'
