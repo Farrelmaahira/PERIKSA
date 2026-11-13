@@ -1,0 +1,161 @@
+name: Deploy backend and AI engine to Azure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'ai-engine/**'
+      - 'proto/**'
+      - 'infra/**'
+      - '.github/workflows/deploy-azure.yml'
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_LOCATION: ${{ vars.AZURE_LOCATION || 'eastasia' }}
+  AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP || 'periksa-prod' }}
+  AZURE_ACR: ${{ vars.AZURE_ACR }}
+  AZURE_POSTGRES: ${{ vars.AZURE_POSTGRES }}
+  AZURE_STORAGE: ${{ vars.AZURE_STORAGE }}
+  AZURE_APP_PLAN: periksa-plan
+  AZURE_BACKEND_APP: periksa-backend
+  AZURE_AI_CONTAINER: periksa-ai
+  AZURE_AI_DNS: periksa-ai-engine
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Create resource group
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az group create \
+              --name "$AZURE_RESOURCE_GROUP" \
+              --location "$AZURE_LOCATION" \
+              --output none
+
+      - name: Provision Azure infrastructure
+        uses: azure/cli@v2
+        env:
+          POSTGRES_ADMIN_PASSWORD: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
+          PERIKSA_SECRET: ${{ secrets.PERIKSA_SECRET }}
+          AI_API_KEY: ${{ secrets.AI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          WEB_ORIGIN: ${{ vars.WEB_ORIGIN || 'http://localhost:3000' }}
+        with:
+          inlineScript: |
+            az deployment group create \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --template-file infra/main.bicep \
+              --parameters \
+                location="$AZURE_LOCATION" \
+                acrName="$AZURE_ACR" \
+                postgresServerName="$AZURE_POSTGRES" \
+                storageAccountName="$AZURE_STORAGE" \
+                appServicePlanName="$AZURE_APP_PLAN" \
+                backendAppName="$AZURE_BACKEND_APP" \
+                aiContainerName="$AZURE_AI_CONTAINER" \
+                aiDnsLabel="$AZURE_AI_DNS" \
+                postgresAdminPassword="$POSTGRES_ADMIN_PASSWORD" \
+                periksaSecret="$PERIKSA_SECRET" \
+                aiApiKey="$AI_API_KEY" \
+                geminiApiKey="$GEMINI_API_KEY" \
+                groqApiKey="$GROQ_API_KEY" \
+                webOrigin="$WEB_ORIGIN" \
+              --output none
+
+      - name: Build and push images
+        run: |
+            registry_login_server=$(az acr show --name "$AZURE_ACR" --query loginServer -o tsv)
+            registry_username=$(az acr credential show --name "$AZURE_ACR" --query username -o tsv)
+            registry_password=$(az acr credential show --name "$AZURE_ACR" --query passwords[0].value -o tsv)
+            echo "$registry_password" | docker login "$registry_login_server" --username "$registry_username" --password-stdin
+            docker build --tag "$registry_login_server/periksa-backend:${{ github.sha }}" --file backend/Dockerfile backend
+            docker build --tag "$registry_login_server/periksa-migrate:${{ github.sha }}" --file backend/Dockerfile.migrate backend
+            docker build --tag "$registry_login_server/periksa-ai:${{ github.sha }}" --file ai-engine/Dockerfile ai-engine
+            docker push "$registry_login_server/periksa-backend:${{ github.sha }}"
+            docker push "$registry_login_server/periksa-migrate:${{ github.sha }}"
+            docker push "$registry_login_server/periksa-ai:${{ github.sha }}"
+
+      - name: Run database migration
+        uses: azure/cli@v2
+        env:
+          POSTGRES_ADMIN_PASSWORD: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
+        with:
+          inlineScript: |
+            registry_login_server=$(az acr show --name "$AZURE_ACR" --query loginServer -o tsv)
+            registry_username=$(az acr credential show --name "$AZURE_ACR" --query username -o tsv)
+            registry_password=$(az acr credential show --name "$AZURE_ACR" --query passwords[0].value -o tsv)
+            database_url="postgresql://periksaadmin:${POSTGRES_ADMIN_PASSWORD}@${AZURE_POSTGRES}.postgres.database.azure.com:5432/periksa?sslmode=require"
+            az container delete --name periksa-migrate --resource-group "$AZURE_RESOURCE_GROUP" --yes --output none 2>/dev/null || true
+            az container create \
+              --name periksa-migrate \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --image "$registry_login_server/periksa-migrate:${{ github.sha }}" \
+              --restart-policy Never \
+              --cpu 0.5 \
+              --memory 1 \
+              --registry-login-server "$registry_login_server" \
+              --registry-username "$registry_username" \
+              --registry-password "$registry_password" \
+              --environment-variables "DATABASE_URL=$database_url" \
+              --output none
+            az container wait --name periksa-migrate --resource-group "$AZURE_RESOURCE_GROUP" --custom "instanceView.state == 'Succeeded'"
+            az container delete --name periksa-migrate --resource-group "$AZURE_RESOURCE_GROUP" --yes --output none
+
+      - name: Deploy backend and AI engine
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            registry_login_server=$(az acr show --name "$AZURE_ACR" --query loginServer -o tsv)
+            registry_username=$(az acr credential show --name "$AZURE_ACR" --query username -o tsv)
+            registry_password=$(az acr credential show --name "$AZURE_ACR" --query passwords[0].value -o tsv)
+            az webapp config container set \
+              --name "$AZURE_BACKEND_APP" \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --docker-custom-image-name "$registry_login_server/periksa-backend:${{ github.sha }}" \
+              --docker-registry-server-url "https://$registry_login_server" \
+              --docker-registry-server-user "$registry_username" \
+              --docker-registry-server-password "$registry_password" \
+              --output none
+            az container delete --name "$AZURE_AI_CONTAINER" --resource-group "$AZURE_RESOURCE_GROUP" --yes --output none 2>/dev/null || true
+            az container create \
+              --name "$AZURE_AI_CONTAINER" \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --image "$registry_login_server/periksa-ai:${{ github.sha }}" \
+              --restart-policy Always \
+              --cpu 0.5 \
+              --memory 1 \
+              --ports 50051 8000 \
+              --dns-name-label "$AZURE_AI_DNS" \
+              --registry-login-server "$registry_login_server" \
+              --registry-username "$registry_username" \
+              --registry-password "$registry_password" \
+              --environment-variables "APP_ENV=production" "GRPC_PORT=50051" \
+              --secure-environment-variables "AI_API_KEY=${{ secrets.AI_API_KEY }}" "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" "GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}" \
+              --output none
+
+      - name: Show backend URL
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az webapp show \
+              --name "$AZURE_BACKEND_APP" \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --query defaultHostName \
+              --output tsv
