@@ -7,15 +7,18 @@ RUN npm ci --legacy-peer-deps
 
 COPY . .
 
-ARG NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
-ARG NEXT_PUBLIC_SITE_URL=http://localhost:3000
-ARG NEXT_PUBLIC_DUMMY=0
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
-ENV NEXT_PUBLIC_DUMMY=$NEXT_PUBLIC_DUMMY
+# NEXT_PUBLIC_* boleh datang dari build arg (CI) atau dari frontend/.env yang ikut
+# ke build context. Arg yang kosong sengaja tidak diekspor supaya nilai di .env terpakai.
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_SITE_URL
+ARG NEXT_PUBLIC_DUMMY
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN npm run build
+RUN set -a; \
+    [ -n "${NEXT_PUBLIC_API_URL:-}" ] && export NEXT_PUBLIC_API_URL; \
+    [ -n "${NEXT_PUBLIC_SITE_URL:-}" ] && export NEXT_PUBLIC_SITE_URL; \
+    [ -n "${NEXT_PUBLIC_DUMMY:-}" ] && export NEXT_PUBLIC_DUMMY; \
+    npm run build
 
 FROM node:22-alpine AS runner
 

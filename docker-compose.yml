@@ -1,7 +1,10 @@
 name: periksa
 
 services:
+  # Stack DB lokal. Tidak dipakai backend selama backend/.env menunjuk Postgres Azure;
+  # jalankan dengan `docker compose --profile local-db up` bila ingin DB lokal.
   postgres:
+    profiles: ["local-db"]
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
@@ -23,6 +26,7 @@ services:
       retries: 10
 
   redis:
+    profiles: ["local-db"]
     image: redis:7-alpine
     restart: unless-stopped
     command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "128mb", "--maxmemory-policy", "allkeys-lru"]
@@ -40,24 +44,11 @@ services:
     restart: unless-stopped
     ports:
       - "8080:8080"
-    environment:
-      - PERIKSA_SECRET=periksa-development-secret-key-min16chars
-      - APP_ENV=development
-      - PORT=8080
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/periksa?sslmode=disable
-      - REDIS_URL=redis://redis:6379/0
-      - AI_ENGINE_GRPC_ADDR=ai-engine:50051
-      - AI_ENGINE_GRPC_TLS=false
-      - AI_ENGINE_URL=http://ai-engine:8000
-      - AI_API_KEY=${AI_API_KEY:-periksa-ai-secret-key-development}
-      - STORAGE_DIR=/data/files
-      - WEB_ORIGIN=${WEB_ORIGIN:-http://localhost:3000}
-      - TRUSTED_PROXIES=${TRUSTED_PROXIES:-}
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+    # Seluruh konfigurasi (DB Azure, AI engine Azure, storage) dibaca dari backend/.env.
+    # Catatan: backend/.env menunjuk Postgres produksi; IP publik mesin ini harus
+    # diizinkan di Azure Database for PostgreSQL > Networking sebelum container bisa start.
+    env_file:
+      - ./backend/.env
 
   ai-engine:
     build: ./ai-engine
@@ -66,35 +57,27 @@ services:
     ports:
       - "8000:8000"
       - "50051:50051"
+    env_file:
+      - ./ai-engine/.env
     environment:
-      - APP_ENV=development
-      - PORT=8000
-      - GRPC_PORT=50051
+      # Kunci harus sama dengan yang dikirim frontend. Provider & kunci model dari ai-engine/.env.
       - AI_API_KEY=${AI_API_KEY:-periksa-ai-secret-key-development}
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
-      - GROQ_API_KEY=${GROQ_API_KEY:-}
-      - AI_PROVIDERS=${AI_PROVIDERS:-gemini:gemini-3-flash-preview,groq:qwen/qwen3.8-27b,gemini:gemini-3.5-flash}
-      - AI_PROVIDER_TIMEOUT=${AI_PROVIDER_TIMEOUT:-6}
 
   frontend:
     build:
       context: ./frontend
-      args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080/api/v1}
-        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
-        NEXT_PUBLIC_DUMMY: ${NEXT_PUBLIC_DUMMY:-0}
+      # Tanpa build args: NEXT_PUBLIC_* dibaca Next dari frontend/.env saat build.
     image: periksa-frontend
     restart: unless-stopped
     ports:
       - "3000:3000"
+    env_file:
+      - ./frontend/.env
     environment:
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080/api/v1}
-      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
-      - NEXT_PUBLIC_DUMMY=${NEXT_PUBLIC_DUMMY:-0}
+      # Di dalam jaringan compose, ringkasan AI memakai ai-engine lokal.
       - AI_ENGINE_URL=http://ai-engine:8000
       - AI_API_KEY=${AI_API_KEY:-periksa-ai-secret-key-development}
     depends_on:
-      - backend
       - ai-engine
 
 volumes:
