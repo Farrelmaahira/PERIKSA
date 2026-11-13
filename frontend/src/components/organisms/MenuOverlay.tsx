@@ -3,6 +3,7 @@ import Link from 'next/link'
 import CloseIcon from '@/components/atoms/CloseIcon'
 import CurvedArrow from '@/components/atoms/CurvedArrow'
 import { useNavLinks } from '@/hooks/use-nav-links'
+import { SITE_TAGLINE } from '@/data/site'
 import { cn } from '@/lib/utils'
 
 interface Props {
@@ -33,7 +34,7 @@ export default function MenuOverlay({ open, onClose }: Props) {
           </Link>
         ))}
       </nav>
-      <p className="text-[1.3rem] opacity-[0.6] uppercase lg:[grid-column:2] lg:[grid-row:2]">Sistem Audit Kontrak Segel Integritas</p>
+      <p className="text-[1.3rem] opacity-[0.6] uppercase lg:[grid-column:2] lg:[grid-row:2]">{SITE_TAGLINE}</p>
     </div>
   )
 }

@@ -1,6 +1,15 @@
 ﻿import type { ApiClause } from "@/interfaces/api";
 import type { ClauseSource } from "@/interfaces/drafting";
 import { getAuthToken } from "./reports";
+import {
+  DUMMY,
+  dummyContractListData,
+  dummyContractDetailData,
+  dummyLifecycleData,
+  dummyOptionsData,
+  dummyCounterpartiesData,
+  dummyMetricsData,
+} from "./mock";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
@@ -180,6 +189,7 @@ export interface DashboardMetricsResponse {
 // -------------------------------------------------------------
 
 export async function fetchContractOptions(): Promise<ContractOptionsResponse | null> {
+  if (DUMMY) return dummyOptionsData();
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/options`, {
       headers: authHeaders(),
@@ -195,6 +205,7 @@ export async function fetchCounterparties(
   jenis?: string,
   search: string = "",
 ): Promise<CounterpartyResponse[]> {
+  if (DUMMY) return dummyCounterpartiesData();
   try {
     const params = new URLSearchParams();
     if (jenis) params.set("jenis", jenis);
@@ -214,6 +225,7 @@ export async function fetchCounterparties(
 export async function createContractAPI(
   payload: CreateContractPayload,
 ): Promise<ContractDetailResponse | null> {
+  if (DUMMY) return dummyContractDetailData(payload.counterpartyId);
   try {
     const res = await fetch(`${API_BASE_URL}/contracts`, {
       method: "POST",
@@ -233,6 +245,7 @@ export async function createContractAPI(
 export async function fetchContractsAPI(
   query: string = "",
 ): Promise<ContractListItem[]> {
+  if (DUMMY) return dummyContractListData();
   try {
     const qs = query ? `?q=${encodeURIComponent(query)}` : "";
     const res = await fetch(`${API_BASE_URL}/contracts${qs}`, {
@@ -248,6 +261,7 @@ export async function fetchContractsAPI(
 export async function fetchContractDetailAPI(
   id: number | string,
 ): Promise<ContractDetailResponse | null> {
+  if (DUMMY) return dummyContractDetailData(id);
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/${id}`, {
       headers: authHeaders(),
@@ -262,6 +276,7 @@ export async function fetchContractDetailAPI(
 export async function fetchContractLifecycleAPI(
   id: number | string,
 ): Promise<ContractLifecycleResponse | null> {
+  if (DUMMY) return dummyLifecycleData(id);
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/${id}/lifecycle`, {
       headers: authHeaders(),
@@ -281,6 +296,15 @@ export async function submitContractReviewAPI(
     status: "setuju" | "minta_revisi";
   },
 ): Promise<ContractReviewItem | null> {
+  if (DUMMY)
+    return {
+      id: 1,
+      versionId: 1,
+      partyId: 1,
+      komentar: payload.komentar,
+      status: payload.status,
+      waktu: "2026-11-10T16:45:00Z",
+    };
   try {
     const res = await fetch(`${API_BASE_URL}/contracts/${id}/reviews`, {
       method: "POST",
@@ -298,6 +322,7 @@ export async function submitContractReviewAPI(
 }
 
 export async function fetchDashboardMetricsAPI(): Promise<DashboardMetricsResponse | null> {
+  if (DUMMY) return dummyMetricsData();
   try {
     const res = await fetch(`${API_BASE_URL}/dashboard/metrics`, {
       headers: authHeaders(),

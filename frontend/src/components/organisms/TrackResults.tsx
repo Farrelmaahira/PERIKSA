@@ -15,9 +15,11 @@ interface Props {
   found?: SealedContract
   onOpen: (code: string) => void
   onReport: () => void
+  activeVillage?: string | null
+  onClearVillage?: () => void
 }
 
-export default function TrackResults({ ref, registry, loading, error, query: q, found, onOpen, onReport }: Props) {
+export default function TrackResults({ ref, registry, loading, error, query: q, found, onOpen, onReport, activeVillage, onClearVillage }: Props) {
   return (
     <section className="pt-80 px-0 pb-120 [scroll-margin-top:1rem] lg:pt-120 lg:px-0 lg:pb-160" ref={ref}>
       <div className="my-0 mx-auto max-w-1680 py-0 px-20 relative w-full md:py-0 md:px-40 lg:py-0 lg:px-80 [.auth>&]:relative [.auth>&]:z-1 [.page-hero>&]:relative [.page-hero>&]:z-1 container">
@@ -42,7 +44,19 @@ export default function TrackResults({ ref, registry, loading, error, query: q, 
         <div className="open-list">
           <div className="[align-items:end] flex flex-wrap gap-20 justify-between mb-30 [&_p]:text-[1.5rem] [&_p]:opacity-[0.6]">
             <h2 className="text-[3.4rem] font-[320] tracking-[-0.035em] leading-[1.05] md:text-[4.4rem] lg:text-[5.2rem]">Kontrak terbuka</h2>
-            <p>{registry.length} kontrak dapat dipantau</p>
+            <div className="flex items-center gap-16">
+              {activeVillage && onClearVillage && (
+                <button
+                  type="button"
+                  onClick={onClearVillage}
+                  className="items-center bg-blue border-[0.1rem] border-transparent border-solid rounded-[2rem] text-white inline-flex text-[1.2rem] gap-8 leading-[1.2] py-3.5 px-10 whitespace-nowrap cursor-pointer [transition:background_0.2s] hover:bg-ink"
+                  aria-label={`Hapus saringan desa ${activeVillage}`}
+                >
+                  {activeVillage} ✕
+                </button>
+              )}
+              <p>{registry.length} kontrak dapat dipantau</p>
+            </div>
           </div>
           <div className="grid gap-16 md:grid-cols-[1fr_1fr] lg:grid-cols-[repeat(3,1fr)]">
             {registry.map((c) => (
