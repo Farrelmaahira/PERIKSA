@@ -1,0 +1,189 @@
+name: Deploy backend and AI engine to Azure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'backend/**'
+      - 'ai-engine/**'
+      - 'proto/**'
+      - 'infra/**'
+      - '.github/workflows/deploy-azure.yml'
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_LOCATION: ${{ vars.AZURE_LOCATION || 'southeastasia' }}
+  AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP || 'periksa-prod' }}
+  AZURE_ENVIRONMENT: ${{ vars.AZURE_ENVIRONMENT || 'periksa-prod-env' }}
+  AZURE_ACR: ${{ vars.AZURE_ACR }}
+  AZURE_POSTGRES: ${{ vars.AZURE_POSTGRES }}
+  AZURE_REDIS: ${{ vars.AZURE_REDIS }}
+  AZURE_STORAGE: ${{ vars.AZURE_STORAGE }}
+  AZURE_BACKEND_APP: periksa-backend
+  AZURE_AI_APP: periksa-ai
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Create resource group
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az group create \
+              --name "$AZURE_RESOURCE_GROUP" \
+              --location "$AZURE_LOCATION" \
+              --output none
+
+      - name: Provision Azure infrastructure
+        uses: azure/cli@v2
+        env:
+          POSTGRES_ADMIN_PASSWORD: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
+          PERIKSA_SECRET: ${{ secrets.PERIKSA_SECRET }}
+          AI_API_KEY: ${{ secrets.AI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          WEB_ORIGIN: ${{ vars.WEB_ORIGIN || 'http://localhost:3000' }}
+        with:
+          inlineScript: |
+            az deployment group create \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --template-file infra/main.bicep \
+              --parameters \
+                location="$AZURE_LOCATION" \
+                environmentName="$AZURE_ENVIRONMENT" \
+                acrName="$AZURE_ACR" \
+                postgresServerName="$AZURE_POSTGRES" \
+                redisName="$AZURE_REDIS" \
+                storageAccountName="$AZURE_STORAGE" \
+                postgresAdminPassword="$POSTGRES_ADMIN_PASSWORD" \
+                periksaSecret="$PERIKSA_SECRET" \
+                aiApiKey="$AI_API_KEY" \
+                geminiApiKey="$GEMINI_API_KEY" \
+                groqApiKey="$GROQ_API_KEY" \
+                webOrigin="$WEB_ORIGIN" \
+              --output none
+
+      - name: Build and push backend image
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az acr build \
+              --registry "$AZURE_ACR" \
+              --image periksa-backend:${{ github.sha }} \
+              --file backend/Dockerfile \
+              backend
+
+      - name: Build and push migration image
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az acr build \
+              --registry "$AZURE_ACR" \
+              --image periksa-migrate:${{ github.sha }} \
+              --file backend/Dockerfile.migrate \
+              backend
+
+      - name: Build and push AI engine image
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az acr build \
+              --registry "$AZURE_ACR" \
+              --image periksa-ai:${{ github.sha }} \
+              --file ai-engine/Dockerfile \
+              ai-engine
+
+      - name: Run database migration
+        uses: azure/cli@v2
+        env:
+          POSTGRES_ADMIN_PASSWORD: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
+        with:
+          inlineScript: |
+            registry_login_server=$(az acr show --name "$AZURE_ACR" --query loginServer -o tsv)
+            registry_username=$(az acr credential show --name "$AZURE_ACR" --query username -o tsv)
+            registry_password=$(az acr credential show --name "$AZURE_ACR" --query passwords[0].value -o tsv)
+            database_url="postgresql://periksaadmin:${POSTGRES_ADMIN_PASSWORD}@${AZURE_POSTGRES}.postgres.database.azure.com:5432/periksa?sslmode=require"
+            if az containerapp job show --name periksa-migrate --resource-group "$AZURE_RESOURCE_GROUP" >/dev/null 2>&1; then
+              az containerapp job update \
+                --name periksa-migrate \
+                --resource-group "$AZURE_RESOURCE_GROUP" \
+                --image "$registry_login_server/periksa-migrate:${{ github.sha }}" \
+                --env-vars "DATABASE_URL=$database_url" \
+                --registry-server "$registry_login_server" \
+                --registry-username "$registry_username" \
+                --registry-password "$registry_password" \
+                --output none
+            else
+              az containerapp job create \
+                --name periksa-migrate \
+                --resource-group "$AZURE_RESOURCE_GROUP" \
+                --environment "$AZURE_ENVIRONMENT" \
+                --trigger-type Manual \
+                --image "$registry_login_server/periksa-migrate:${{ github.sha }}" \
+                --cpu 0.25 \
+                --memory 0.5Gi \
+                --env-vars "DATABASE_URL=$database_url" \
+                --registry-server "$registry_login_server" \
+                --registry-username "$registry_username" \
+                --registry-password "$registry_password" \
+                --output none
+            fi
+            az containerapp job start \
+              --name periksa-migrate \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --output none
+            for attempt in $(seq 1 30); do
+              status=$(az containerapp job execution list \
+                --name periksa-migrate \
+                --resource-group "$AZURE_RESOURCE_GROUP" \
+                --query '[0].properties.status' -o tsv)
+              case "$status" in
+                Succeeded) exit 0 ;;
+                Failed|Canceled) echo "Migration failed with status $status"; exit 1 ;;
+              esac
+              sleep 10
+            done
+            echo "Migration did not finish in time"
+            exit 1
+
+      - name: Deploy container revisions
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            registry_login_server=$(az acr show --name "$AZURE_ACR" --query loginServer -o tsv)
+            az containerapp update \
+              --name "$AZURE_BACKEND_APP" \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --image "$registry_login_server/periksa-backend:${{ github.sha }}" \
+              --revision-suffix "${GITHUB_SHA:0:12}" \
+              --output none
+            az containerapp update \
+              --name "$AZURE_AI_APP" \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --image "$registry_login_server/periksa-ai:${{ github.sha }}" \
+              --revision-suffix "${GITHUB_SHA:0:12}" \
+              --output none
+
+      - name: Show backend URL
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az containerapp show \
+              --name "$AZURE_BACKEND_APP" \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --query properties.configuration.ingress.fqdn \
+              --output tsv
