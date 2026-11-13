@@ -1,5 +1,4 @@
 ﻿import Btn from '@/components/atoms/Btn'
-import DatePicker from '@/components/atoms/DatePicker'
 import ErrorText from '@/components/atoms/ErrorText'
 import FormAlert from '@/components/atoms/FormAlert'
 import Hint from '@/components/atoms/Hint'
@@ -22,13 +21,13 @@ export default function SpkForm({ c, spk }: Props) {
           <input value={form.number} onChange={(e) => spk.set({ number: e.target.value })} />
         </FormField>
         <FormField label="Tanggal SPK">
-          <DatePicker value={form.date} onChange={(val: string) => spk.set({ date: val })} />
+          <input type="date" value={form.date} onChange={(e) => spk.set({ date: e.target.value })} />
         </FormField>
         <FormField label="Mulai bekerja">
-          <DatePicker value={form.start} onChange={(val: string) => spk.set({ start: val })} />
+          <input type="date" value={form.start} onChange={(e) => spk.set({ start: e.target.value })} />
         </FormField>
         <FormField label="Selesai paling lambat">
-          <DatePicker value={form.end} onChange={(val: string) => spk.set({ end: val })} />
+          <input type="date" value={form.end} onChange={(e) => spk.set({ end: e.target.value })} />
         </FormField>
       </div>
       {spk.error && <ErrorText as="p">{spk.error}</ErrorText>}
