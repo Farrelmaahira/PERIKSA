@@ -217,6 +217,10 @@ resource backendApp 'Microsoft.Web/sites@2022-03-01' = {
           value: '${aiFqdn}:50051'
         }
         {
+          name: 'AI_ENGINE_URL'
+          value: 'http://${aiFqdn}:8000'
+        }
+        {
           name: 'AI_ENGINE_GRPC_TLS'
           value: 'false'
         }

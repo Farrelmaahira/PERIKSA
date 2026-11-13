@@ -167,7 +167,12 @@ jobs:
               --registry-login-server "$registry_login_server" \
               --registry-username "$registry_username" \
               --registry-password "$registry_password" \
-              --environment-variables "APP_ENV=production" "GRPC_PORT=50051" \
+              --environment-variables \
+                "APP_ENV=production" \
+                "PORT=8000" \
+                "GRPC_PORT=50051" \
+                "AI_PROVIDERS=gemini:gemini-3-flash-preview,gemini:gemini-3.5-flash" \
+                "AI_PROVIDER_TIMEOUT=6" \
               --secure-environment-variables "AI_API_KEY=${{ secrets.AI_API_KEY }}" "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" "GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}" \
               --output none
 

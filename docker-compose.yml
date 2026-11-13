@@ -47,6 +47,7 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/periksa?sslmode=disable
       - REDIS_URL=redis://redis:6379/0
       - AI_ENGINE_GRPC_ADDR=ai-engine:50051
+      - AI_ENGINE_URL=http://ai-engine:8000
       - AI_API_KEY=${AI_API_KEY:-periksa-ai-secret-key-development}
       - STORAGE_DIR=/data/files
     depends_on:
