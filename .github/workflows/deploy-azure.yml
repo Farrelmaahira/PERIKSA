@@ -80,9 +80,7 @@ jobs:
               --output none
 
       - name: Build and push images
-        uses: azure/cli@v2
-        with:
-          inlineScript: |
+        run: |
             registry_login_server=$(az acr show --name "$AZURE_ACR" --query loginServer -o tsv)
             registry_username=$(az acr credential show --name "$AZURE_ACR" --query username -o tsv)
             registry_password=$(az acr credential show --name "$AZURE_ACR" --query passwords[0].value -o tsv)
