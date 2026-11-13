@@ -1,4 +1,4 @@
-﻿import type { Answers, Audit, Clause, ClauseSource, TemplateKey } from '@/interfaces/drafting'
+import type { Answers, Audit, Clause, ClauseSource, TemplateKey } from '@/interfaces/drafting'
 import type { Session } from '@/interfaces/auth'
 import { db } from '@/lib/db/db'
 import { nowIso } from '@/lib/dates/now-iso'
@@ -13,7 +13,7 @@ export function createContract(
   s: Session,
 ) {
   const nums = db.get().contracts.map((c) => parseInt(c.code.slice(-3), 10)).filter((n) => !Number.isNaN(n))
-  const code = `SKS-2026-${String(Math.max(45, ...nums) + 1).padStart(3, '0')}`
+  const code = `PRK-2026-${String(Math.max(45, ...nums) + 1).padStart(3, '0')}`
   const at = nowIso()
   let c: DContract = {
     code,

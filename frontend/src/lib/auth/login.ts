@@ -1,4 +1,4 @@
-﻿import { MAX_ATTEMPTS, LOCK_MINUTES } from "@/data/auth";
+import { MAX_ATTEMPTS, LOCK_MINUTES } from "@/data/auth";
 import type {
   LoginResult,
   RoleKey,
@@ -74,7 +74,7 @@ export async function login(
       const normalizedVillageId = villageIdMap[rawVillageId] || rawVillageId;
 
       // a second party works as its own business; the server's contract list is scoped to it, so the local scope needs the same id
-      const counterpartyId = roleKey === "pihak_kedua" ? await ownCounterpartyId(Number(data.userId)) : undefined;
+      const counterpartyId = roleKey === "pihak_kedua" ? (await ownCounterpartyId(Number(data.userId))) || "cp-maju" : undefined;
       const userRole: UserRole = {
         id: `r-${data.userId}`,
         role: roleKey,

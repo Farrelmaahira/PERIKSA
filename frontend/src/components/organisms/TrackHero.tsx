@@ -1,4 +1,4 @@
-﻿import type { FormEvent } from 'react'
+import type { FormEvent } from 'react'
 import Arrow from '@/components/atoms/Arrow'
 import HeroBg from '@/components/atoms/HeroBg'
 import TrackHeading from '@/components/organisms/TrackHeading'
@@ -24,7 +24,7 @@ export default function TrackHero({ registry, input, onInput, onSearch, onOpen }
           <label htmlFor="track-q" className="[clip:rect(0_0_0_0)] h-[1px] overflow-hidden absolute whitespace-nowrap w-[1px] sr-only">
             Kode kontrak atau hash
           </label>
-          <input id="track-q" value={input} onChange={(e) => onInput(e.target.value)} placeholder="Contoh: SKS-2026-014 atau 64 karakter hash" autoComplete="off" spellCheck={false} />
+          <input id="track-q" value={input} onChange={(e) => onInput(e.target.value)} placeholder="Contoh: PRK-2026-014 atau 64 karakter hash" autoComplete="off" spellCheck={false} />
           <button type="submit" aria-label="Lacak">
             Lacak <Arrow />
           </button>
