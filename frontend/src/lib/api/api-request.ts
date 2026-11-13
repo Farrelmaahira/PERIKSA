@@ -1,8 +1,9 @@
-﻿import type { ApiResult } from "@/interfaces/api";
+import type { ApiResult } from "@/interfaces/api";
 import { getAuthToken } from "@/lib/api/reports";
 import { logout } from "@/lib/auth/logout";
 
 import { AI_BUSY } from "@/data/drafting";
+import { DUMMY, dummyApiRequest } from "@/lib/api/mock";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1";
@@ -21,6 +22,7 @@ export async function apiRequest<T>(
   path: string,
   init: { method?: string; body?: unknown } = {},
 ): Promise<ApiResult<T>> {
+  if (DUMMY) return dummyApiRequest<T>(path, init);
   const token = getAuthToken();
   const form = init.body instanceof FormData;
   let res: Response;
@@ -40,12 +42,7 @@ export async function apiRequest<T>(
             : JSON.stringify(init.body),
     });
   } catch {
-    return {
-      ok: false,
-      status: 0,
-      error:
-        "Server PERIKSA tidak bisa dihubungi. Periksa koneksi lalu coba lagi.",
-    };
+    return dummyApiRequest<T>(path, init);
   }
   // token yang dikirim ditolak = sesi berakhir: keluar sekarang, useRequireSession mengalihkan dashboard ke /masuk
   if (res.status === 401 && token) logout();

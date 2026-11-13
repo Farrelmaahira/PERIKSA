@@ -37,6 +37,6 @@ export function toSealedContract(c: PublicContractSummary | PublicContractDetail
     milestones,
     paidPercent: p ? Math.round(p.persenDibayar) : undefined,
     reports: [],
-    hash: detail?.sha256Hash ?? '',
+    hash: detail?.sha256Hash ?? (c as { sha256Hash?: string }).sha256Hash ?? '',
   }
 }

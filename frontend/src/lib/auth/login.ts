@@ -6,6 +6,7 @@ import type {
   UserRole,
 } from "@/interfaces/auth";
 import { setAuthToken } from "@/lib/api/reports";
+import { DUMMY } from "@/lib/api/mock";
 import { ownCounterpartyId } from "@/lib/auth/own-counterparty-id";
 import { findUser } from "./find-user";
 import { ensureSeedUsers, users } from "./users-store";
@@ -51,7 +52,8 @@ export async function login(
     return { ok: false, field: "password", error: "Masukkan kata sandi." };
 
   // 1. Coba autentikasi ke Backend API (Database PostgreSQL)
-  try {
+  if (!DUMMY) {
+    try {
     const apiRes = await fetch(`${API_BASE_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -147,6 +149,7 @@ export async function login(
     };
   } catch {
     // Fallback bila backend API tidak dapat dihubungi
+  }
   }
 
   // 2. Fallback mock auth (bila backend tidak dapat dihubungi)
