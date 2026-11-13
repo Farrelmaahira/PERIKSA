@@ -107,6 +107,7 @@ jobs:
               --name periksa-migrate \
               --resource-group "$AZURE_RESOURCE_GROUP" \
               --image "$registry_login_server/periksa-migrate:${{ github.sha }}" \
+              --os-type Linux \
               --restart-policy Never \
               --cpu 0.5 \
               --memory 1 \
@@ -138,6 +139,7 @@ jobs:
               --name "$AZURE_AI_CONTAINER" \
               --resource-group "$AZURE_RESOURCE_GROUP" \
               --image "$registry_login_server/periksa-ai:${{ github.sha }}" \
+              --os-type Linux \
               --restart-policy Always \
               --cpu 0.5 \
               --memory 1 \
