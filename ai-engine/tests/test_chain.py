@@ -91,7 +91,7 @@ def test_no_attempt_after_deadline(monkeypatch, default_chain):
     assert calls == []
 
 
-def test_reasoning_effort_belongs_to_provider_not_model(monkeypatch):
+def test_gemini_request_does_not_send_provider_specific_reasoning(monkeypatch):
     sent = {}
 
     def handler(request):
@@ -102,7 +102,7 @@ def test_reasoning_effort_belongs_to_provider_not_model(monkeypatch):
     monkeypatch.setattr(llm.httpx, "AsyncClient", lambda **kw: real(transport=httpx.MockTransport(handler), **kw))
     asyncio.run(llm.call_provider("gemini", "gemini-3.5-flash", "s", "u"))
     asyncio.run(llm.call_provider("groq", "openai/gpt-oss-120b", "s", "u"))
-    assert sent["generativelanguage.googleapis.com"]["reasoning_effort"] == "low"
+    assert "reasoning_effort" not in sent["generativelanguage.googleapis.com"]
     assert "reasoning_effort" not in sent["api.groq.com"] and sent["api.groq.com"]["model"] == "openai/gpt-oss-120b"
 
 

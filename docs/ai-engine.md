@@ -65,7 +65,7 @@ Pesan `UNAVAILABLE`: "Layanan AI sedang penuh. Coba lagi beberapa menit lagi, at
 - Dianggap gagal dan langsung pindah ke model berikutnya: HTTP 429, 503, 400 (mis. model menolak parameter), timeout, atau jawaban yang tidak lolos validasi (bukan JSON, skema salah, kode pasal tidak dikenal, pasal draf tidak sama dengan template, id dasar hukum di luar daftar).
 - Batas waktu per percobaan `AI_PROVIDER_TIMEOUT` (6 dtk) bersifat **total** (`asyncio.timeout`), bukan per fase seperti timeout httpx; dibatasi lagi oleh sisa deadline gRPC.
 - Log hanya memuat nama model dan alasan (kode HTTP atau jenis galat), contoh `groq:qwen/qwen3.8-27b gagal: 429`. Isi kontrak tidak pernah dicatat.
-- `reasoning_effort` melekat ke **provider** (`PROVIDERS` di `app/llm.py`; Gemini memakai `minimal`), bukan ke model. Model yang menolaknya (400) cukup dihitung gagal dan rantai lanjut. Gemini 3.7 dan 3.8 menolak `minimal` (butuh `low`), jadi belum cocok masuk rantai dengan pengaturan sekarang.
+- Parameter provider-specific tidak dikirim ke Gemini karena endpoint OpenAI-compatible Gemini tidak membutuhkannya. Jika provider mengembalikan 400, engine menghitungnya sebagai kegagalan dan meneruskan ke provider berikutnya.
 
 Rantai bawaan (`DEFAULT_CHAIN` di `app/llm.py`, juga `.env.example`):
 `gemini:gemini-3.8-flash,gemini:gemini-3.5-flash,groq:qwen/qwen3.8-27b,groq:openai/gpt-oss-120b`
