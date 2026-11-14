@@ -57,11 +57,9 @@ services:
     ports:
       - "8000:8000"
       - "50051:50051"
+    # AI engine memakai .env root sebagai sumber konfigurasi bersama.
     env_file:
-      - ./ai-engine/.env
-    environment:
-      # Kunci harus sama dengan yang dikirim frontend. Provider & kunci model dari ai-engine/.env.
-      - AI_API_KEY=${AI_API_KEY:-periksa-ai-secret-key-development}
+      - ./.env
 
   frontend:
     build:
@@ -72,7 +70,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - ./frontend/.env
+      - ./frontend/.env.local
     environment:
       # Di dalam jaringan compose, ringkasan AI memakai ai-engine lokal.
       - AI_ENGINE_URL=http://ai-engine:8000
