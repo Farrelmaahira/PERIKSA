@@ -31,3 +31,26 @@ NEXT_PUBLIC_API_URL=https://<backend-fqdn>/api/v1
 ```
 
 Workflow membangun image migrasi terpisah dari `backend/cmd/migrate`, menjalankannya sebagai Container Instance sekali jalan, dan tidak pernah menjalankan reset schema.
+
+## Troubleshooting login 401 di production
+
+Geo `401 Unauthorized` pada `POST /api/v1/auth/login` **belum tentu** email/sandi salah. Handler login meneruskan kegagalan koneksi database sebagai error server (`500`) sejak perbaikan ini, tetapi deployment lama bisa menampilkannya sebagai 401.
+
+Langkah diagnosa cepat:
+
+1. `GET https://<backend-fqdn>/readyz` harus `200`. Bila `503`, backend tidak bisa menjangkau PostgreSQL.
+2. Bandingkan `DATABASE_URL` di App Service dengan password PostgreSQL yang berlaku:
+
+   ```bash
+   az webapp config appsettings list -n periksa-backend -g <resource-group> \
+     --query "[?name=='DATABASE_URL'].value" -o tsv
+   az postgres flexible-server show -n <postgres-name> -g <resource-group> \
+     --query administratorLogin -o tsv
+   ```
+
+3. Jika password dirotasi lewat Portal/CLI di luar pipeline, `DATABASE_URL` menjadi basi. Samakan keduanya: perbarui secret `POSTGRES_ADMIN_PASSWORD` di GitHub, lalu jalankan ulang workflow (step **Sync backend database credentials** akan menulis `DATABASE_URL` dari secret yang sama dengan container migrasi).
+
+Workflow sekarang berakhir dengan smoke test: `/readyz` harus `200` dan login `tester@periksa.id` / `periksa123` harus `200`. Deploy dianggap gagal bila salah satunya tidak terpenuhi, sehingga masalah ini tidak lagi lolos diam-diam.
+
+Akun demo berasal dari `backend/scripts/seed_demo.sql` (idempoten, dijalankan saat migrasi). Semua email akun demo memakai domain `@periksa.id` dan sandi `periksa123`.
+
