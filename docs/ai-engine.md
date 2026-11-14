@@ -68,7 +68,7 @@ Pesan `UNAVAILABLE`: "Layanan AI sedang penuh. Coba lagi beberapa menit lagi, at
 - `reasoning_effort` melekat ke **provider** (`PROVIDERS` di `app/llm.py`; Gemini memakai `minimal`), bukan ke model. Model yang menolaknya (400) cukup dihitung gagal dan rantai lanjut. Gemini 3.7 dan 3.8 menolak `minimal` (butuh `low`), jadi belum cocok masuk rantai dengan pengaturan sekarang.
 
 Rantai bawaan (`DEFAULT_CHAIN` di `app/llm.py`, juga `.env.example`):
-`gemini:gemini-3-flash-preview,groq:qwen/qwen3.8-27b,groq:openai/gpt-oss-120b,gemini:gemini-3.5-flash`
+`gemini:gemini-3.8-flash,gemini:gemini-3.5-flash,groq:qwen/qwen3.8-27b,groq:openai/gpt-oss-120b`
 
 ### Batas kuota paket gratis (penting untuk kapasitas)
 - **Gemini gratis: 20 permintaan per hari per model** (error 429 `generate_content_free_tier_requests, limit: 20`). Setiap model punya kuota sendiri, jadi menambah model Gemini menambah kapasitas harian. Setelah habis, model itu gagal cepat (±0,5 dtk) dan rantai lanjut ke berikutnya.
@@ -83,7 +83,7 @@ Rantai bawaan (`DEFAULT_CHAIN` di `app/llm.py`, juga `.env.example`):
 | `AI_API_KEY` | wajib | Harus sama dengan backend. Service menolak start bila kosong |
 | `GROQ_API_KEY`, `GEMINI_API_KEY` | kosong | Provider tanpa key dilewati |
 | `AI_PROVIDERS` | rantai bawaan | Lihat bagian 4 |
-| `GROQ_MODEL`, `GEMINI_MODEL` | `qwen/qwen3.8-27b`, `gemini-3-flash-preview` | Hanya untuk entri tanpa `:model` |
+| `GROQ_MODEL`, `GEMINI_MODEL` | `qwen/qwen3.8-27b`, `gemini-3.8-flash` | Hanya untuk entri tanpa `:model` |
 | `AI_PROVIDER_TIMEOUT` | `6` | Detik, per percobaan, total |
 | `GRPC_PORT` | `50051` | Azure: `8585`. `0` mematikan gRPC. Bind gagal tidak mematikan REST |
 

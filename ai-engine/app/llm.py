@@ -44,14 +44,14 @@ class Provider:
 
 PROVIDERS = {
     "groq": Provider("https://api.groq.com/openai/v1/chat/completions", "GROQ_API_KEY", "GROQ_MODEL", "qwen/qwen3.8-27b"),
-    # Gemini 3 "berpikir" dulu; minimal memangkas ~7 dtk jadi ~3 dtk dengan hasil audit yang sama.
+    # Gemini 3 memakai reasoning ringan agar tetap kompatibel dengan endpoint OpenAI Gemini.
     "gemini": Provider(
         "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
-        "GEMINI_API_KEY", "GEMINI_MODEL", "gemini-3-flash-preview", {"reasoning_effort": "minimal"},
+        "GEMINI_API_KEY", "GEMINI_MODEL", "gemini-3.8-flash", {"reasoning_effort": "low"},
     ),
 }
 # Urutan dari benchmark (kualitas temuan, lalu kecepatan); hasil terakhir di docs/ai-engine.md.
-DEFAULT_CHAIN = "gemini:gemini-3-flash-preview,groq:qwen/qwen3.8-27b,groq:openai/gpt-oss-120b,gemini:gemini-3.5-flash"
+DEFAULT_CHAIN = "gemini:gemini-3.8-flash,gemini:gemini-3.5-flash,groq:qwen/qwen3.8-27b,groq:openai/gpt-oss-120b"
 TIMEOUT = float(os.getenv("AI_PROVIDER_TIMEOUT", "6"))  # batas per percobaan (detik)
 BUSY_MESSAGE = "Layanan AI sedang penuh. Coba lagi beberapa menit lagi, atau lanjutkan menyunting pasal secara manual."
 

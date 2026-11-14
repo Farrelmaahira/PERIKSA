@@ -16,10 +16,10 @@ from support import fake, http_error, rpc
 from test_grpc import AUDIT, NO_FINDINGS
 
 DEFAULT = [
-    ("gemini", "gemini-3-flash-preview"),
+    ("gemini", "gemini-3.8-flash"),
+    ("gemini", "gemini-3.5-flash"),
     ("groq", "qwen/qwen3.8-27b"),
     ("groq", "openai/gpt-oss-120b"),
-    ("gemini", "gemini-3.5-flash"),
 ]
 
 
@@ -46,31 +46,31 @@ def test_provider_without_api_key_is_skipped(monkeypatch, default_chain):
 def test_failures_move_to_next_model_in_order(monkeypatch, default_chain, caplog):
     calls = []
     monkeypatch.setattr(llm, "call_provider", fake({
-        "gemini:gemini-3-flash-preview": http_error(400),  # mis. model menolak reasoning_effort
+        "gemini:gemini-3.8-flash": http_error(503),
+        "gemini:gemini-3.5-flash": http_error(503),
         "groq:qwen/qwen3.8-27b": http_error(429),
-        "groq:openai/gpt-oss-120b": httpx.ReadTimeout("lambat"),
-        "gemini:gemini-3.5-flash": NO_FINDINGS,
+        "groq:openai/gpt-oss-120b": NO_FINDINGS,
     }, calls))
     with caplog.at_level(logging.WARNING, logger="ai-engine"):
         res = rpc("AuditContract", AUDIT)
     assert calls == [f"{p}:{m}" for p, m in DEFAULT]
-    assert res.model == "gemini:gemini-3.5-flash"
+    assert res.model == "groq:openai/gpt-oss-120b"
     # Log memuat model dan alasan, tidak memuat isi kontrak.
-    assert "groq:qwen/qwen3.8-27b gagal: 429" in caplog.text and "gemini:gemini-3-flash-preview gagal: 400" in caplog.text
+    assert "groq:qwen/qwen3.8-27b gagal: 429" in caplog.text and "gemini:gemini-3.8-flash gagal: 503" in caplog.text
     assert "diatur kemudian" not in caplog.text
 
 
 def test_invalid_output_counts_as_failure(monkeypatch, default_chain):
     calls = []
     unknown_kode = json.dumps({"findings": [{"kode_pasal": "P-99", "tingkat": "SARAN", "pesan": "x"}]})
-    monkeypatch.setattr(llm, "call_provider", fake({"gemini:gemini-3-flash-preview": unknown_kode, "groq": NO_FINDINGS}, calls))
+    monkeypatch.setattr(llm, "call_provider", fake({"gemini:gemini-3.8-flash": unknown_kode, "groq": NO_FINDINGS}, calls))
     assert rpc("AuditContract", AUDIT).model == "groq:qwen/qwen3.8-27b" and len(calls) == 2
 
 
 def test_first_success_stops_the_chain(monkeypatch, default_chain):
     calls = []
     monkeypatch.setattr(llm, "call_provider", fake({"gemini": NO_FINDINGS, "groq": NO_FINDINGS}, calls))
-    assert rpc("AuditContract", AUDIT).model == "gemini:gemini-3-flash-preview" and len(calls) == 1
+    assert rpc("AuditContract", AUDIT).model == "gemini:gemini-3.8-flash" and len(calls) == 1
 
 
 def test_all_fail_returns_busy_message_on_grpc_and_rest(monkeypatch, default_chain):
@@ -102,7 +102,7 @@ def test_reasoning_effort_belongs_to_provider_not_model(monkeypatch):
     monkeypatch.setattr(llm.httpx, "AsyncClient", lambda **kw: real(transport=httpx.MockTransport(handler), **kw))
     asyncio.run(llm.call_provider("gemini", "gemini-3.5-flash", "s", "u"))
     asyncio.run(llm.call_provider("groq", "openai/gpt-oss-120b", "s", "u"))
-    assert sent["generativelanguage.googleapis.com"]["reasoning_effort"] == "minimal"
+    assert sent["generativelanguage.googleapis.com"]["reasoning_effort"] == "low"
     assert "reasoning_effort" not in sent["api.groq.com"] and sent["api.groq.com"]["model"] == "openai/gpt-oss-120b"
 
 

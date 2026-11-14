@@ -172,7 +172,7 @@ jobs:
                 "APP_ENV=production" \
                 "PORT=8000" \
                 "GRPC_PORT=50051" \
-                "AI_PROVIDERS=gemini:gemini-3-flash-preview,gemini:gemini-3.5-flash" \
+                "AI_PROVIDERS=gemini:gemini-3.8-flash,gemini:gemini-3.5-flash,groq:qwen/qwen3.8-27b,groq:openai/gpt-oss-120b" \
                 "AI_PROVIDER_TIMEOUT=6" \
               --secure-environment-variables "AI_API_KEY=${{ secrets.AI_API_KEY }}" "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" "GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}" \
               --output none
