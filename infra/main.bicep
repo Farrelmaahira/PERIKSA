@@ -23,7 +23,7 @@ param postgresAdminUser string = 'periksaadmin'
 param postgresDatabaseName string = 'periksa'
 
 var placeholderImage = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
-var postgresUrl = 'postgresql://${postgresAdminUser}:${postgresAdminPassword}@${postgresServerName}.postgres.database.azure.com:5432/${postgresDatabaseName}?sslmode=require'
+var postgresUrl = 'postgresql://${postgresAdminUser}:${uriComponent(postgresAdminPassword)}@${postgresServerName}.postgres.database.azure.com:5432/${postgresDatabaseName}?sslmode=require'
 var aiFqdn = '${aiDnsLabel}.${location}.azurecontainer.io'
 
 resource registry 'Microsoft.ContainerRegistry/registries@2023-07-01' = {

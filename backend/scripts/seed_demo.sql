@@ -1,11 +1,19 @@
 -- Akun demo yang tampil di halaman login (frontend/src/data/auth.ts seedAccounts).
 -- Kata sandi semua akun: periksa123 (hash bcrypt cost 10 asli, tanpa bypass di kode).
 -- Prasyarat: PERIKSA.sql dan seed_villages.sql sudah dijalankan.
--- Idempoten: hanya INSERT ... ON CONFLICT DO NOTHING / WHERE NOT EXISTS; tidak pernah UPDATE/DELETE.
+-- Idempoten: INSERT ... ON CONFLICT DO NOTHING / WHERE NOT EXISTS; tidak pernah menimpa sandi.
+-- Satu-satunya UPDATE adalah koreksi alamat lama (lihat di bawah), bukan perubahan data akun.
 -- Bila email sudah ada dengan data lain, baris itu dibiarkan apa adanya (sandinya tidak ditimpa).
 -- Jalankan: psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f backend/scripts/seed_demo.sql
 
 BEGIN;
+
+-- Koreksi alamat lama: sempat tersimpan sebagai budi.santoso@warga.id, sementara
+-- daftar akun demo di frontend memakai domain @periksa.id. Tanpa ini login demo
+-- Budi Santoso selalu 401 di deployment yang sudah pernah ter-seed.
+UPDATE users SET email = 'budi.santoso@periksa.id'
+WHERE email = 'budi.santoso@warga.id'
+  AND NOT EXISTS (SELECT 1 FROM users WHERE email = 'budi.santoso@periksa.id');
 
 DO $$
 BEGIN
@@ -26,7 +34,7 @@ INSERT INTO users (nama, email, password_hash, status) VALUES
   ('Asep Saepudin',      'bpd@periksa.id',          '$2a$10$bQ5ukg9P6bGG63LP/pGH6.FFcHV4ynYxI9LbKFBJnZyYprUxH9d6e', 'aktif'),
   ('Dewi Lestari',       'inspektorat@periksa.id',  '$2a$10$bQ5ukg9P6bGG63LP/pGH6.FFcHV4ynYxI9LbKFBJnZyYprUxH9d6e', 'aktif'),
   ('Siti Rahma',         'warga@periksa.id',        '$2a$10$bQ5ukg9P6bGG63LP/pGH6.FFcHV4ynYxI9LbKFBJnZyYprUxH9d6e', 'aktif'),
-  ('Budi Santoso Warga', 'budi.santoso@warga.id',   '$2a$10$bQ5ukg9P6bGG63LP/pGH6.FFcHV4ynYxI9LbKFBJnZyYprUxH9d6e', 'aktif')
+  ('Budi Santoso Warga', 'budi.santoso@periksa.id',   '$2a$10$bQ5ukg9P6bGG63LP/pGH6.FFcHV4ynYxI9LbKFBJnZyYprUxH9d6e', 'aktif')
 ON CONFLICT (email) DO NOTHING;
 
 -- Peran berbasis desa (kades, bpd, warga) di Desa Sukamaju.
@@ -34,7 +42,7 @@ INSERT INTO user_roles (user_id, role, village_id)
 SELECT u.id, x.role::user_roles_role_enum, v.id
 FROM (VALUES ('tester@periksa.id', 'kades'), ('tester@periksa.id', 'bpd'), ('tester@periksa.id', 'warga'),
              ('kades@periksa.id', 'kades'), ('bpd@periksa.id', 'bpd'),
-             ('warga@periksa.id', 'warga'), ('budi.santoso@warga.id', 'warga')) AS x(email, role)
+             ('warga@periksa.id', 'warga'), ('budi.santoso@periksa.id', 'warga')) AS x(email, role)
 JOIN users u ON u.email = x.email
 JOIN LATERAL (SELECT id FROM villages WHERE nama = 'Desa Sukamaju' ORDER BY id LIMIT 1) v ON TRUE
 WHERE NOT EXISTS (SELECT 1 FROM user_roles ur WHERE ur.user_id = u.id AND ur.role::text = x.role);
@@ -77,7 +85,7 @@ WHERE u.email = 'inspektorat@periksa.id'
 -- Profil warga (desa domisili + no HP).
 INSERT INTO warga_profiles (user_id, village_id, no_hp)
 SELECT u.id, (SELECT id FROM villages WHERE nama = 'Desa Sukamaju' ORDER BY id LIMIT 1), x.no_hp
-FROM (VALUES ('warga@periksa.id', '081255500142'), ('budi.santoso@warga.id', '081255500199')) AS x(email, no_hp)
+FROM (VALUES ('warga@periksa.id', '081255500142'), ('budi.santoso@periksa.id', '081255500199')) AS x(email, no_hp)
 JOIN users u ON u.email = x.email
 ON CONFLICT (user_id) DO NOTHING;
 

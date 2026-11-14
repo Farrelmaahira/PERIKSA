@@ -92,6 +92,23 @@ jobs:
             docker push "$registry_login_server/periksa-migrate:${{ github.sha }}"
             docker push "$registry_login_server/periksa-ai:${{ github.sha }}"
 
+      - name: Sync backend database credentials
+        uses: azure/cli@v2
+        env:
+          POSTGRES_ADMIN_PASSWORD: ${{ secrets.POSTGRES_ADMIN_PASSWORD }}
+        with:
+          inlineScript: |
+            # Bicep sudah mengisi DATABASE_URL, tetapi bila password Postgres dirotasi
+            # di luar pipeline, app setting bisa tertinggal dan semua query gagal
+            # (login ikut 401). Set ulang dari sumber yang sama dengan container migrasi.
+            encoded_password=$(python3 -c "import os,urllib.parse; print(urllib.parse.quote(os.environ['POSTGRES_ADMIN_PASSWORD'], safe=''))")
+            database_url="postgresql://periksaadmin:${encoded_password}@${AZURE_POSTGRES}.postgres.database.azure.com:5432/periksa?sslmode=require"
+            az webapp config appsettings set \
+              --name "$AZURE_BACKEND_APP" \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --settings "DATABASE_URL=$database_url" \
+              --output none
+
       - name: Run database migration
         uses: azure/cli@v2
         env:
@@ -101,7 +118,8 @@ jobs:
             registry_login_server=$(az acr show --name "$AZURE_ACR" --query loginServer -o tsv)
             registry_username=$(az acr credential show --name "$AZURE_ACR" --query username -o tsv)
             registry_password=$(az acr credential show --name "$AZURE_ACR" --query passwords[0].value -o tsv)
-            database_url="postgresql://periksaadmin:${POSTGRES_ADMIN_PASSWORD}@${AZURE_POSTGRES}.postgres.database.azure.com:5432/periksa?sslmode=require"
+            encoded_password=$(python3 -c "import os,urllib.parse; print(urllib.parse.quote(os.environ['POSTGRES_ADMIN_PASSWORD'], safe=''))")
+            database_url="postgresql://periksaadmin:${encoded_password}@${AZURE_POSTGRES}.postgres.database.azure.com:5432/periksa?sslmode=require"
             az container delete --name periksa-migrate --resource-group "$AZURE_RESOURCE_GROUP" --yes --output none 2>/dev/null || true
             az container create \
               --name periksa-migrate \
@@ -186,3 +204,40 @@ jobs:
               --resource-group "$AZURE_RESOURCE_GROUP" \
               --query defaultHostName \
               --output tsv
+
+      - name: Smoke test (database + demo login)
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            # Gagal di sini berarti deploy tidak benar-benar siap dipakai, walaupun
+            # container sudah "Running" (mis. DATABASE_URL basi -> semua query gagal).
+            host=$(az webapp show \
+              --name "$AZURE_BACKEND_APP" \
+              --resource-group "$AZURE_RESOURCE_GROUP" \
+              --query defaultHostName \
+              --output tsv)
+
+            ready=""
+            for attempt in $(seq 1 24); do
+              ready=$(curl -s -o /dev/null -w '%{http_code}' "https://$host/readyz" || true)
+              if [ "$ready" = "200" ]; then
+                break
+              fi
+              echo "readyz=$ready (percobaan $attempt/24), menunggu 10 detik..."
+              sleep 10
+            done
+            if [ "$ready" != "200" ]; then
+              echo "::error::/readyz tidak 200 (HTTP $ready) - periksa DATABASE_URL dan kredensial Postgres"
+              exit 1
+            fi
+
+            login_code=$(curl -s -o /tmp/login.json -w '%{http_code}' \
+              -X POST "https://$host/api/v1/auth/login" \
+              -H 'Content-Type: application/json' \
+              -d '{"email":"tester@periksa.id","password":"periksa123"}')
+            if [ "$login_code" != "200" ]; then
+              echo "::error::login akun demo gagal (HTTP $login_code)"
+              cat /tmp/login.json || true
+              exit 1
+            fi
+            echo "Backend siap: /readyz 200 dan login akun demo berhasil."

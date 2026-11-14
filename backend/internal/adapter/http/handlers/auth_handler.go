@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"net/http"
 	"strconv"
 	"strings"
@@ -192,7 +193,19 @@ func HandleLogin(d *Deps) http.HandlerFunc {
 
 		email := strings.ToLower(strings.TrimSpace(req.Email))
 		user, err := d.Store.UserByEmail(r.Context(), email)
-		if err != nil || !usecase.CheckPassword(user.PasswordHash, req.Password) {
+		if err != nil {
+			// Gangguan database (mis. DATABASE_URL basi) bukan kredensial salah.
+			// 401 di sini menyesatkan: frontend menampilkan "email/sandi salah"
+			// padahal penyebabnya koneksi database.
+			if !errors.Is(err, domain.ErrNotFound) {
+				slog.Error("login: gagal membaca user", "email", email, "err", err)
+				WriteError(w, http.StatusInternalServerError, "login sedang tidak tersedia, coba lagi nanti")
+				return
+			}
+			WriteError(w, http.StatusUnauthorized, "invalid email or password")
+			return
+		}
+		if !usecase.CheckPassword(user.PasswordHash, req.Password) {
 			WriteError(w, http.StatusUnauthorized, "invalid email or password")
 			return
 		}
@@ -227,5 +240,3 @@ func HandleMe(d *Deps) http.HandlerFunc {
 		WriteJSON(w, http.StatusOK, meResponse(u))
 	}
 }
-
-
