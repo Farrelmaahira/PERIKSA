@@ -44,10 +44,10 @@ class Provider:
 
 PROVIDERS = {
     "groq": Provider("https://api.groq.com/openai/v1/chat/completions", "GROQ_API_KEY", "GROQ_MODEL", "qwen/qwen3.8-27b"),
-    # Gemini 3 memakai reasoning ringan agar tetap kompatibel dengan endpoint OpenAI Gemini.
+    # Gemini OpenAI-compatible endpoint tidak memerlukan parameter reasoning tambahan.
     "gemini": Provider(
         "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
-        "GEMINI_API_KEY", "GEMINI_MODEL", "gemini-3.8-flash", {"reasoning_effort": "low"},
+        "GEMINI_API_KEY", "GEMINI_MODEL", "gemini-3.8-flash",
     ),
 }
 # Urutan dari benchmark (kualitas temuan, lalu kecepatan); hasil terakhir di docs/ai-engine.md.
