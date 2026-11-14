@@ -158,7 +158,7 @@ resource aiContainer 'Microsoft.ContainerInstance/containerGroups@2023-05-01' = 
             }
             {
               name: 'AI_PROVIDERS'
-              value: 'gemini:gemini-3-flash-preview,gemini:gemini-3.5-flash'
+              value: 'gemini:gemini-3.8-flash,gemini:gemini-3.5-flash,groq:qwen/qwen3.8-27b,groq:openai/gpt-oss-120b'
             }
             {
               name: 'AI_PROVIDER_TIMEOUT'
