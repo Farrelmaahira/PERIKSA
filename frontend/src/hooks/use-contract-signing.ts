@@ -12,16 +12,33 @@ export function useContractSigning(c: DContract, session: Session) {
   const [signError, setSignError] = useState('')
   const [signing, setSigning] = useState(false)
 
-  // signatures are stored on the server first; the local copy only follows a confirmed save
+  // Signatures are stored as files on the server first; the local copy only follows a confirmed save.
   const signOnServer = async (who: 'desa' | 'pihak') => {
     if (!c.apiId) return
     setSigning(true)
     setSignError('')
-    const res = await signContract(c.apiId, { metode: 'simulasi', referensi: image || `sig_${who === 'desa' ? 'desa' : 'vendor'}_${session.name}` })
-    setSigning(false)
-    if (!res.ok) return setSignError(`Tanda tangan belum tersimpan. ${res.error}`)
-    sign(c.code, who, session, image ?? undefined)
-    setImage(null)
+    try {
+      let payload: FormData | { metode: string; referensi?: string }
+      if (image) {
+        const imageResponse = await fetch(image)
+        if (!imageResponse.ok) throw new Error('signature image could not be read')
+        const imageBlob = await imageResponse.blob()
+        payload = new FormData()
+        payload.append('metode', 'simulasi')
+        payload.append('signature_image', imageBlob, 'signature.png')
+      } else {
+        payload = { metode: 'simulasi', referensi: `sig_${who === 'desa' ? 'desa' : 'vendor'}_${session.name}` }
+      }
+
+      const res = await signContract(c.apiId, payload)
+      if (!res.ok) return setSignError(`Tanda tangan belum tersimpan. ${res.error}`)
+      sign(c.code, who, session, image ?? undefined)
+      setImage(null)
+    } catch {
+      setSignError('Tanda tangan belum tersimpan. Gambar tanda tangan tidak dapat diproses.')
+    } finally {
+      setSigning(false)
+    }
   }
 
   const act = (key: SignKey) => (key === 'meterai' ? applyMeterai(c.code, session) : signOnServer(key))
