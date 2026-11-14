@@ -40,6 +40,7 @@ export interface CounterpartyResponse {
   userId?: number;
   nama: string;
   jenis: string;
+  email?: string;
   npwp?: string;
   alamat?: string;
 }
