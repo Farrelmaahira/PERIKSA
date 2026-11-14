@@ -2,6 +2,8 @@
 
 **PERIKSA** adalah platform kontrak digital cerdas dan akuntabel yang dirancang untuk membantu pemerintah desa, UMKM, dan penyedia jasa menyusun, mengaudit, menandatangani, serta mengawasi perjanjian kontrak kerja sama secara transparan, sah menurut hukum, dan anti-pemalsuan.
 
+Panduan instalasi, hasil pengujian, API, demo langsung, AI, dan deployment tersedia di [docs/panduan-periksa.md](docs/panduan-periksa.md).
+
 ---
 
 ## 🚀 Alur Kerja Utama

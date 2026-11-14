@@ -47,6 +47,7 @@ func loadDotEnv(paths ...string) {
 func main() {
 	loadDotEnv(".env", "../.env")
 	reset := flag.Bool("reset", false, "Reset public schema before applying SQL")
+	seedDemo := flag.Bool("seed-demo", false, "Apply demo accounts after schema migration")
 	filePath := flag.String("file", "", "Path to PERIKSA.sql file (optional, auto-detected)")
 	dbURL := flag.String("db", "", "PostgreSQL connection string (default from DATABASE_URL or localhost)")
 	flag.Parse()
@@ -96,6 +97,7 @@ func main() {
 	}
 	defer conn.Close(ctx)
 
+	tableExists := false
 	if *reset {
 		fmt.Println("[WARN] Mereset schema public...")
 		_, err := conn.Exec(ctx, "DROP SCHEMA public CASCADE; CREATE SCHEMA public;")
@@ -103,31 +105,51 @@ func main() {
 			log.Fatalf("Gagal mereset schema public: %v", err)
 		}
 	} else {
-		var tableExists bool
 		_ = conn.QueryRow(ctx, `SELECT EXISTS (
 			SELECT FROM information_schema.tables 
 			WHERE table_schema = 'public' 
 			AND table_name = 'regions'
 		)`).Scan(&tableExists)
-		if tableExists {
-			fmt.Println("[INFO] Skema sudah termigrasi (tabel regions sudah ada). Melewati eksekusi PERIKSA.sql.")
+	}
+	if tableExists {
+		fmt.Println("[INFO] Skema sudah termigrasi (tabel regions sudah ada). Melewati eksekusi PERIKSA.sql.")
+		if !*seedDemo {
 			return
 		}
+	} else {
+		fmt.Println("[INFO] Menyiapkan compatibility domain datetime...")
+		_, err = conn.Exec(ctx, `DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'datetime') THEN CREATE DOMAIN datetime AS timestamptz; END IF; END $$;`)
+		if err != nil {
+			log.Fatalf("Gagal membuat domain datetime: %v", err)
+		}
+
+		fmt.Printf("[INFO] Mengimpor %s...\n", absPath)
+		_, err = conn.Exec(ctx, string(sqlBytes))
+		if err != nil {
+			log.Fatalf("Gagal mengeksekusi SQL: %v", err)
+		}
+
+		fmt.Println("[SUCCESS] PERIKSA.sql berhasil diimpor ke database.")
 	}
 
-	fmt.Println("[INFO] Menyiapkan compatibility domain datetime...")
-	_, err = conn.Exec(ctx, `DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'datetime') THEN CREATE DOMAIN datetime AS timestamptz; END IF; END $$;`)
-	if err != nil {
-		log.Fatalf("Gagal membuat domain datetime: %v", err)
-	}
+	if *seedDemo {
+		villagesSQL, err := os.ReadFile("/app/seed_villages.sql")
+		if err != nil {
+			log.Fatalf("Gagal membaca seed villages: %v", err)
+		}
+		fmt.Println("[INFO] Menyiapkan data desa...")
+		if _, err := conn.Exec(ctx, string(villagesSQL)); err != nil {
+			log.Fatalf("Gagal mengeksekusi seed villages: %v", err)
+		}
 
-	fmt.Printf("[INFO] Mengimpor %s...\n", absPath)
-	_, err = conn.Exec(ctx, string(sqlBytes))
-	if err != nil {
-		log.Fatalf("Gagal mengeksekusi SQL: %v", err)
+		demoSQL, err := os.ReadFile("/app/seed_demo.sql")
+		if err != nil {
+			log.Fatalf("Gagal membaca seed demo: %v", err)
+		}
+		fmt.Println("[INFO] Menyiapkan akun demo...")
+		if _, err := conn.Exec(ctx, string(demoSQL)); err != nil {
+			log.Fatalf("Gagal mengeksekusi seed demo: %v", err)
+		}
+		fmt.Println("[SUCCESS] Akun demo siap digunakan.")
 	}
-
-	fmt.Println("[SUCCESS] PERIKSA.sql berhasil diimpor ke database.")
 }
-
-

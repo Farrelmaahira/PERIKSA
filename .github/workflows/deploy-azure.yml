@@ -114,6 +114,7 @@ jobs:
               --registry-login-server "$registry_login_server" \
               --registry-username "$registry_username" \
               --registry-password "$registry_password" \
+              --command-line "/app/migrate -file /app/PERIKSA.sql -seed-demo" \
               --environment-variables "DATABASE_URL=$database_url" \
               --output none
             for attempt in $(seq 1 36); do
