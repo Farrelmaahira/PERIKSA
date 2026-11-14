@@ -59,3 +59,31 @@ Layanan lokal akan berjalan pada:
 - **AI Engine (gRPC)**: localhost:50051
 - **PostgreSQL**: localhost:5432
 - **Redis**: localhost:6379
+
+## Hasil Pengujian API Production
+
+Pengujian dilakukan pada 14 November 2026 menggunakan endpoint production dan skenario dari koleksi Postman `docs/periksa-api.postman_collection.json`.
+
+Base URL:
+
+```text
+https://periksa-backend.azurewebsites.net/api/v1
+```
+
+| Skenario | Hasil |
+|---|---|
+| `GET /healthz` | HTTP 200 |
+| `GET /readyz` | HTTP 200 |
+| Login akun tester | HTTP 200 |
+| `GET /auth/me` | HTTP 200 |
+| `GET /dashboard/metrics` | HTTP 200 |
+| `GET /contracts` | HTTP 200 |
+| `GET /reports` | HTTP 200 |
+| `GET /notifications` | HTTP 200 |
+| `GET /public/contracts` | HTTP 200 |
+| `GET /public/seals/verify` | HTTP 200 |
+| Login akun demo kades, penyedia, inspektorat, dan warga | HTTP 200 |
+| `GET /audit-logs` dengan role kades, penyedia, dan inspektorat | HTTP 200 |
+| `GET /audit-logs` dengan role warga | HTTP 403 sesuai pembatasan akses |
+
+Pengujian lengkap beserta daftar kelompok endpoint tersedia di [docs/panduan-periksa.md](docs/panduan-periksa.md).

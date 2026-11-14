@@ -127,10 +127,14 @@ Pengujian berikut dijalankan pada 14 November 2026.
 | Backend unit dan handler test | Berhasil |
 | Backend test yang membutuhkan PostgreSQL lokal | Belum dapat dijalankan karena PostgreSQL lokal tidak aktif |
 | AI engine test | Belum dijalankan pada laptop ini karena `pytest` belum tersedia |
-| Backend production `/healthz` | HTTP 200 |
-| Backend production `/readyz` | HTTP 200 |
+| Backend production `/healthz` dan `/readyz` | HTTP 200 |
+| Login tester production | HTTP 200 |
+| API terproteksi: profil, dashboard, kontrak, laporan, notifikasi | HTTP 200 |
+| API publik: kontrak publik dan verifikasi segel | HTTP 200 |
+| Login akun demo kades, penyedia, inspektorat, dan warga | HTTP 200 |
+| `GET /audit-logs` dengan role kades, penyedia, dan inspektorat | HTTP 200 |
+| `GET /audit-logs` dengan role warga | HTTP 403 sesuai pembatasan role |
 | AI engine production `/healthz` | HTTP 200 |
-| Login tester dari Vercel | HTTP 200 |
 | CORS `https://periksaid.vercel.app` | Berhasil |
 
 Test backend yang membutuhkan database bukan berarti implementasinya gagal. Test tersebut berhenti karena tidak menemukan PostgreSQL di `localhost:5432`. Jalankan PostgreSQL lokal atau gunakan profil Docker `local-db` sebelum mengulang test tersebut.
