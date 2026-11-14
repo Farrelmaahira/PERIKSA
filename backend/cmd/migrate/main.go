@@ -133,6 +133,15 @@ func main() {
 	}
 
 	if *seedDemo {
+		villagesSQL, err := os.ReadFile("/app/seed_villages.sql")
+		if err != nil {
+			log.Fatalf("Gagal membaca seed villages: %v", err)
+		}
+		fmt.Println("[INFO] Menyiapkan data desa...")
+		if _, err := conn.Exec(ctx, string(villagesSQL)); err != nil {
+			log.Fatalf("Gagal mengeksekusi seed villages: %v", err)
+		}
+
 		demoSQL, err := os.ReadFile("/app/seed_demo.sql")
 		if err != nil {
 			log.Fatalf("Gagal membaca seed demo: %v", err)

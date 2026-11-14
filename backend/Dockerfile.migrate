@@ -10,5 +10,6 @@ FROM alpine:3.20
 WORKDIR /app
 COPY --from=builder /migrate /app/migrate
 COPY scripts/PERIKSA.sql /app/PERIKSA.sql
+COPY scripts/seed_villages.sql /app/seed_villages.sql
 COPY scripts/seed_demo.sql /app/seed_demo.sql
 ENTRYPOINT ["/app/migrate", "-file", "/app/PERIKSA.sql"]
